@@ -1,0 +1,819 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THE BEER-WARE LICENSE (Revision 42):                                            %
+% <r@twopi.eu> schrieb diese Datei. Solange Sie diesen Vermerk nicht entfernen,   %
+% können Sie mit dem Material machen, was Sie möchten. Wenn wir uns eines Tages   %
+% treffen und Sie denken, das Material ist es wert, können Sie mir dafür ein Bier %
+% ausgeben. Robert Hemstedt                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+%\usepackage{ucs}
+\usepackage[left=2.0cm, right=2.0cm, top=2.0cm, bottom=2.0cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[ngerman]{babel}
+\usepackage{bbm}
+\usepackage{amssymb}
+\usepackage[amsthm,thmmarks]{ntheorem}
+%\usepackage{tabularx}
+\usepackage[arrow, matrix, curve]{xy}
+
+% b) Lemma, Satz, Theorem usw.
+\makeatletter
+\renewtheoremstyle{plain}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1\ ##2:]}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1~##2~##3:]\mbox{}}
+\makeatother
+
+\theoremstyle{plain}
+\newtheorem{Theorem}{Theorem}[section]
+\newtheorem{Satz}[Theorem]{Satz}
+\newtheorem{Prop}[Theorem]{Proposition}
+\newtheorem{Lemma}[Theorem]{Lemma}
+\newtheorem{Korollar}[Theorem]{Korollar}
+\newtheorem{Definition}[Theorem]{Definition}
+\newtheorem*{Folgerung}[Theorem]{Folgerung}
+\newtheorem*{Behauptung}[Theorem]{Behauptung}  
+
+\theorembodyfont{\upshape}
+\newtheorem{Bemerkung}[Theorem]{Bemerkung} 
+\newtheorem{Beispiel}[Theorem]{Beispiel}
+\newtheorem{Entscheidungsproblem}[Theorem]{Entscheidungsproblem}
+\newtheorem{Algorithmus}[Theorem]{Algorithmus}
+\newtheorem{Berechnungsproblem}[Theorem]{Berechnungsproblem}
+   
+
+\newcommand{\herv}[1]{{\emph{\textbf{#1}}}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\cupdot}{\mathbin{\dot{\cup}}}
+
+\def\presuper#1#2%
+  {\mathop{}%
+   \mathopen{\vphantom{#2}}^{#1}%
+   \kern-\scriptspace%
+   #2}
+
+\numberwithin{equation}{section}
+
+\newsavebox{\fmbox}
+\newenvironment{fmpage}[1]
+{\begin{lrbox}{\fmbox}\begin{minipage}{#1}}
+{\end{minipage}\end{lrbox}\fbox{\usebox{\fmbox}}}
+
+\linespread{1.05}
+\author{Robert Hemstedt \\ \texttt{r@twopi.eu}}
+\title{Zusammenfassung\footnote{nach meinen pers\"onlichen Aufzeichnungen} Lineare Algebra I\newline \newline \large{gehalten von Prof. Dr. Stefan Schwede, Universität Bonn} \\im Wintersemester 2012/2013}
+\begin{document}
+\maketitle
+\section*{Hinweise zur Verwendung}
+Die stets aktuelle Version dieser Zusammenfassung lässt sich finden unter\\
+\texttt{http://github.com/euklid/Zusf-LinAI} .\\
+Dort sind auch die \texttt{.tex}-Dateien zu finden, wenn man selbst Veränderungen vornehmen möchte. Bitte beachtet die \textbf{Lizenzhinweise}.\\
+
+Werter Kommilitone, diese Zusammenfassung basiert zum größten Teil auf meinen Mitschriften unserer LA-Vorlesungen bei Prof. Dr. Schwede sowie teilweise auf dem Fischer\footnote{Gerd Fischer, Lineare Algebra, Vieweg}. 
+
+Was die Nummerierung der Sätze und Kapitelabschnitte angeht, so ist sie nicht mit der aus dem Fischer identisch.
+
+Gedacht ist diese Zusammenfassung explizit als Prüfungsvorbereitung und wird daher auch noch bis zur letzten Vorlesung weiterhin ergänzt. Wenn du Anmerkungen, Ergänzungen, Lob oder Kritik haben solltest, dann sprich mich einfach an, schick mir eine E-Mail oder, was das beste wohl ist, benutze \texttt{github.com}, um mir eine \textit{pull}-Request zu schicken.
+
+Ich hafte weder für \glqq fehlende\grqq\ Inhalte noch für inhaltliche oder sprachliche Fehler.
+
+Ich hoffe, dass diese Zusammenfassung und der damit verbundene Aufwand sich nicht nur für mich als Verfasser, sondern auch noch für dich als Kommilitone lohnen wird und der Aufwand auch in Form einer möglichst guten Klausurnote entlohnt wird. \\
+Viel Spaß beim Lernen!
+\section*{Lizenz}
+Ich veröffentliche dieses Dokument unter der Beerware-Lizenz:\\ \\
+\hspace{-3.5cm}
+\begin{fmpage}{\textwidth}
+\glqq THE BEER-WARE LICENSE\grqq\ (Revision 42):\\
+\texttt{$<$r@twopi.eu$>$} schrieb diese Datei. Solange Sie diesen Vermerk nicht entfernen, können Sie mit dem Material machen, was Sie möchten. Wenn wir uns eines Tages treffen und Sie denken, das Material ist es wert, können Sie mir dafür ein Bier ausgeben. Robert Hemstedt
+\end{fmpage}
+\hspace{3.5cm} \\
+Weitere Hinweise lassen sich finden unter: \texttt{http://de.wikipedia.org/wiki/Beerware}
+\section{Erste Anfänge}
+$\R$ = Körper der reellen Zahlen; $\R^n=\{(x_1,\ldots,x_n):x_{i\in \{1,\ldots,n\}}\in \R\},$ entspricht der Menge der $n$-Tupel reller Zahlen; $ n\in \N=\{1,2,3,\ldots\}$ \\
+$x=(x_1,\ldots,x_n)$ hat $x_i$ als $i$-te Koordinate/Komponente\\
+Addition in $\R^n: (x_1,\ldots,x_n) + (y_1,\ldots,y_n)=(x_1+y_1,\ldots,x_n+y_n)$\\
+Skalarmultiplikation: $\lambda \in \R, \lambda\cdot (x_1,x_2,\ldots,x_n)=(\lambda\cdot x_1, \lambda \cdot x_2,\ldots, \lambda\cdot x_n)$\\
+Nullvektor: $0=(\underbrace{(0,0,\ldots,0)}_{n \text{ Nullen}}; 0+x=x=x+0$\\
+Negative: $-x=(-x_1,-x_2,\ldots,-x_n)$
+\subsection{Gerade in der Ebene}
+$v,v'\in R, v\neq v', w=v'-v$, $L=\{x\in \R^2:$es gibt $\lambda\in R$ mit $x=v+\lambda w\}=v+\R\cdot w$\\
+Parametrisierung: $\Phi:\R \rightarrow L\subseteq \R^2$, $\lambda \mapsto v+\lambda w=\Phi(\lambda)$\\
+Alternativ: Beschreibung durch Gleichungssystem: Seien $a_1, a_2, b\in \R$. Betrachte die Menge $L=\{(x_1,x_2)\in\R^2:a_1 x_1+a_2 x_2=b\}$, Koeffizienten: $a_1, a_2, b$; Unbestimmte: $x_1, x_2$\\
+Spezialfall: $a_1=a_2=0,$ also $L=\{(x_1,x_2)\in\R^2:0=b\}=\left\lbrace \begin{array}{ll} \R^2,&\text{falls }b=0\\ \emptyset,&\text{sonst}
+\end{array}\right.$\\
+Spezialfall: $a_2=0,a_1\neq 0: L=\{(x_1,x_2)\in\R^2:a_1 x_1=b\}, x_1=\frac{b}{a_1} \rightarrow$ Parametrisierung $\Phi: \R \rightarrow L, \Phi(\lambda)=\left(\frac{b}{a_1},\lambda\right)$\\
+Spezialfall: $a_1=0,a_2\neq 0$ analog\\
+\glqq Allgemeiner Fall\grqq: $a_1\neq 0, a_2\neq 0$\\
+Schnittpunkte von $L$ mit den Achsen sind: $x_1=0:x_2=\frac{b}{a_2} \Rightarrow \left(0;\frac{b}{a_2}\right)\in L, x_2=0: x_1=\frac{b}{a_1} \Rightarrow \left(\frac{b}{a_1};0\right)\in L \Rightarrow$ Parametrisierung für $b\neq 0: \Phi: \R \rightarrow L \subset \R^2, \Phi(\lambda)=\left(0,\frac{b}{a_2}\right)+\lambda\left(\frac{b}{a_1},-\frac{b}{a_2} \right)= \left(\lambda\frac{b}{a_1},\frac{b}{a_2}-\lambda\frac{b}{a_2}\right)$\\
+Zwei Geraden in einer Ebene schneiden sich \glqq typischerweise\grqq\ in einem Punkt.
+\begin{Definition}
+Eine Teilmenge $L\subseteq \R^2$ heißt Gerade, falls es $a_1,a_2\in \R$ gibt mit $(a_1,a_2)\neq(0,0)$, so dass $L=\{(x_1,x_2)\in\R^2:a_1 x_1+ a_2 x_2=b\}$.
+\end{Definition}
+\begin{Satz}
+Eine Teilmenge $L\subseteq\R^2$ ist genau dann Gerade, wenn es $v,w\in\R^2$ gibt, mit $w\neq 0$, sodass $L=v+\R w$
+\end{Satz}
+\subsection{Ebenen und Geraden im Raum ($\R^3$)}
+Durch zwei gegebene verschiedene Punkte $v,v'\in\R^3$ geht genau eine Gerade $L=\{v+\lambda w: \lambda\in \R\}$, wobei $w=v'-v$.\\
+Betrachte lineare Gleichung $a_1x_1+a_2x_2+a_3x_3=b$ mit $(E=\{(x_1,x_2,x_3)\in\R^3: a_1x_1+a_2x_2+a_3x_3=b\})$, Parameter $a_1,a_2,a_3,b\in\R$\\
+1. Fall: $a_1=a_2=a_3=0\Rightarrow \left\lbrace\begin{array}{ll}E=\emptyset,&\text{falls }b\neq 0 \\ E=\R^3,&\text{falls }b=0 \end{array}\right.$\\
+2. Fall: $a_1=a_2=0,a_3\neq 0$ $E=\left\lbrace(x_1,x_2,x_3):x_3=\frac{b}{a_3}\right\rbrace$\\
+3. Fall: $a_3=0,(a_1,a_2)\neq 0$ $E=\{(x_1,x_2,x_3):a_1 x_1+a_2 x_2=b\}$
+\begin{Definition}
+Eine Teilmenge $E\subseteq \R^3$ heißt Ebene, wenn es $a_1,a_2,a_3,b\in\R$ mit $(a_1,a_2,a_3)\neq (0,0,0)$ gibt, sodass $E=\{(x_1,x_2,x_3)\in\R^3:a_1x_1+a_2x_2+a_3x_3=b\}$.\\
+Parametrisierung? $\Phi:\R^2\rightarrow \R^3$ mit Bild die Menge E. Sei z.B. $a_3\neq 0: \Rightarrow x_3=\frac{b-a_1x_1-a_2x_2}{a_3}$, $x_1$ und $x_2$ frei wählbar, $x_3$ festgelegt. \\
+Wir können nun bezeichnen $\Phi(\lambda_1,\lambda_2)=\left(\lambda_1,\lambda2,\frac{b-a_1\lambda_1-a_2\lambda_2}{a_3}\right)\in E$. $\Phi$ ist eine Bijektion auf E. Andere Schreibweise: $E=u+\R v+\R w=\{(x_1,x_2,x_3)=x\in\R^3:$ es gibt $\lambda_1,\lambda_2\in \R$ mit $x=u+\lambda_1 v+\lambda_2 w\}$. Man nehme z.B. $u=Phi(0;0),v=\Phi(1;0),w=\Phi(0;1)$.
+\end{Definition}
+\subsection{Kompakte Schreibweisen für lineare Gleichungssysteme}
+Gleichungssystem mit $n$ Unbestimmten und $m$ Gleichungen: $a_{ij},b_i\in\R$ ($i$-te Zeile und $j$-te Spalte) \begin{align}
+a_{11}x_1+a_{12}x_2+\ldots+a_{1n}x_n&=b_1 \nonumber \\ 
+a_{21}x_1+a_{22}x_2+\ldots+a_{2n}x_n&=b_2  \nonumber\\ 
+\vdots\qquad\qquad \vdots \qquad\qquad \vdots \qquad&\qquad \vdots \nonumber\\ 
+a_{m1}x_1+a_{m2}x_2+\ldots+a_{mn}x_n&=b_m \nonumber
+\end{align}
+Man kodiert die Koeffizienten in einer sogenannten Koeffizientenmatrix\\
+\begin{minipage}{8cm}\[
+A=\left(\begin{matrix}
+a_{11} & a_{12} & \ldots & a_{1n} \\
+a_{21} & a_{22} & \ldots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{i1} & a_{i2} & \ldots & a_{in} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{11} & a_{12} & \ldots & a_{1n} 
+\end{matrix} \right)
+\]
+\end{minipage} \begin{minipage}{5cm}$m\times n$-Matrix \\
+$m$ - Anzahl Zeilen \\
+$n$ - Anzahl der Spalten
+\end{minipage}\\
+Wir schreiben die Unbestimmten in einen Spaltenvektor: $x=\left(\begin{array}{c}x_1\\  \vdots\\x_n\end{array}\right)$, $b=\left(\begin{array}{c} x_1 \\ \vdots \\b_m\end{array} \right)$.
+Wir definieren ein Produkt aus einer $m\times n$- Matrix und einem $n$-Spaltenvektor:\[
+A\cdot x =\left. \left(\begin{matrix}
+a_{11} & a_{12} & \ldots & a_{1n} \\
+a_{21} & a_{22} & \ldots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{11} & a_{12} & \ldots & a_{1n} 
+\end{matrix} \right) \cdot \left(\begin{array}{c}x_1\\ x_2\\  \vdots\\x_n\end{array}\right) = \left(\begin{matrix}
+a_{11}x_1+a_{12}x_2+\ldots+a_{1n}x_n  \\ 
+a_{21}x_1+a_{22}x_2+\ldots+a_{2n}x_n \\ 
+\vdots\qquad \qquad \vdots \qquad \ddots \qquad  \vdots\\ 
+a_{m1}x_1+a_{m2}x_2+\ldots+a_{mn}x_n \end{matrix} \right) \right\rbrace m\text{-Spaltenvektor} 
+\]
+die $i$-te Gleichung des Systems lautet dann $\sum_{j=1}^n{a_{ij}x_j}=b_i$. Das gesamte Gleichungssystem ist also äquivalent zu $\sum_{j=1}^n{a_{ij}x_j}=b_i$ für alle $i=1,\ldots,m$. \\
+Lösungsmenge des Gleichungssystems: Lös$(A,b)=\{x\in\R^n: Ax=b\}$.
+\subsection{Gauß'sches Eliminierungsverfahren}
+\begin{enumerate}
+\item Umformung der Matrix auf Zeilenstufenform
+\item explizites Lösen \glqq von unten nach oben\grqq
+\end{enumerate}
+\subsubsection{Explizites Lösen}
+\begin{Definition}
+Eine $m\times n$-Matrix hat Zeilenstufenform, wenn sie von folgender Form ist: %ToDo: Bild machen und einfügen, da keine Lust, das jetzt mit viel Latex-Fu zu machen...
+\end{Definition}
+\begin{Definition}[(formaler)]
+\begin{itemize}
+\item Es gibt eine Zahl r mit $0\leq r\leq m,$ sodass die ersten r Zeilen nicht $0$ sind und die Zeilen $r+1,\ldots,m$ $0$ sind.
+\item Für alle $1\leq i\leq r$ sei $j_i$ der Index derjenigen Spalte, die zuerst $\neq 0$ ist. $j_i=\min\{j:a_{ij}\neq 0\}$. Dann gilt $j_1<j_2<\ldots<j_r$.
+\end{itemize}
+Spezialfall: $j_1=1, j_2=2, \ldots, j_r=r$ % ToDo bild einfügen % kann immer durch umnummerierung der Variablen errericht werden.
+Die erweiterte Koeffizientenmatrix hat folgende Form: %ToDo Bild einfügen
+$a_{ii}\neq 0$ für $i=1,\ldots,r$.
+\end{Definition}
+1. Fall: es gibt ein $i=r+1,\ldots,m$ mit $b_i\neq 0$. Dann ist eine der Gleichungen $0=b_i\neq 0$. Dann ist Lös$(A,b)=\emptyset$.\\
+2. Fall: $b_{r+1}=b_{r+2}=\ldots=b_m=0$ (Beachte: $r=m$ zugelassen, dann sind wir immer im zweiten Fall.) Dann sind $x_{r+1},\ldots,x_m$ freie Variablen, deren Werte frei gewählt werden können und man erhält $x_r,x_{r-1},\ldots,x_2,x_1$ durch sukzessives Auflösen nach der Variable und einsetzen. Wir wählen Parameter $\lambda_1,\ldots,\lambda_k\in\R$ ($k=n-r,$ Anzahl der freien Variablen) und setzen $x_{r+1}:=\lambda_1,\ldots, x_m:=\lambda_k$ . $x_r$ erhält man durch Auflösen von $a_{rr}x_r+a_{r,r+1}\lambda_1+\ldots+a_{rn}\lambda_k=b_r$. Auflösen gibt dann: $x_r:=\frac{1}{a_{rr}}(b_r-a_{r,r+1}\lambda_1-\ldots-a_{rn}\lambda_k)$. Am Ende erhalten wir (alle) Lösungen des Gleichungssystems als $x_n=\lambda_k,\ldots,x_{r+1}=\lambda_1$ frei wählbar, $x_r=\frac{1}{a_{rr}}(b_r-a_{r,r+1}\lambda_1-\ldots-a_{rn}\lambda_k)$, usw. $x_{r-1}=\ldots,\ldots,x_1=\ldots$ als explizite Ausdrücke in den $\lambda_1, \ldots,\lambda_k$. \\
+Man erhält auf diese Weise eine Parametrisierung des Lösungsraumes $\Phi:\R^k \rightarrow $ Lös$(A,b)\subseteq \R^n,$ $(\lambda_1,\ldots,\lambda_k)\mapsto (x_1,\ldots,x_r,\lambda_1,\ldots,\lambda_k)$. $\Phi$ ist injektiv, später zeigen wir, dass $\Phi$ auch surjektiv ist.
+\subsubsection{Umformung zur Zeilenstufenform}
+\begin{Definition}
+Eine elementare Zeilenumformung eines Gleichungssystems ist eine von folgenden Operationen: \begin{enumerate}
+\item Vertauschen von zwei Zeilen
+\item Addieren des $\lambda$-fachen der i-ten Zeile zu k-ten Zeile, wobie $\lambda\in\R,\lambda\neq 0,i\neq k$.
+\end{enumerate}
+\end{Definition}
+\begin{Satz}
+Sei $(A,b)$ die erweiterte Koeffizientenmatrix eines linearen Gleichungssystems und $(\tilde{A},\tilde{b})$ entstehe aus $(A,b)$ durch endliche viele Umformungen von Typ 1 und 2. Dann haben die Gleichungssysteme $A\cdot x=b$ und $\tilde{A}\cdot x=b$ dieselben Lösungen, d.h. $\emph{Lös}(A,b)=\emph{Lös}(\tilde{A},\tilde{b})$.\\
+\underline{Vorsicht:} Der Lösungsraum ändert sich bei elementaren Spaltenumformungen.
+\end{Satz}
+\begin{Satz}
+Jede Matrix A kann durch endlich viele elementare Zeilenumformungen auf Zeilenstufenform gebracht werden. (Einfach Gauß-Algorithmus mit Umformungen des Typs 1 und 2 anwenden\ldots)
+\end{Satz}
+\subsubsection{Zusammenfassung des Gauß-Verfahrens}
+\begin{enumerate}
+\item Man stelle die erweiterte Koeffizientenmatrix auf.
+\item Man bringt die Matrix $A$ auf Zeilenstufenform und führt gleichartig die Umformungen mit $b$ durch.
+\item Man liest an $b$ und $r$ ab, ob es überhaupt Lösungen gibt. Falls es Lösungen gibt, wählt man die freien Variablen als Parameter und löst von unten nach oben auf.
+\end{enumerate}
+\section{Gruppen}
+Eine binäre Verknüpfung (Komposition) ist eine Abbildung $*:G\times G \rightarrow G, (a,b)\mapsto *(a,b)=a*b$.\\
+Sei $X$ eine Menge. Dann ist Abb$(X,X)$ die Menge aller Abbildungen von $X$ zu sich. Auf Abb$(X,X)$ gibt es die Komposition $\circ:$Abb$(X,X)\times$Abb$(X,X) \rightarrow $Abb$(X,X)$, $(f,g)\mapsto f\circ g$, wobei $f\circ g: X\rightarrow X$ definiert ist durch $(f\circ g)(x)=f(g(x))$ für $x\in X$. Diese Verknüpfung ist assoziativ.
+\begin{Definition}
+Eine Gruppe ist eine Menge G zusammen mit einer Verknüpfung $*:G\times G \rightarrow G$, die folgende Eigenschaften hat:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(G\arabic{enumi})}}
+\item Assoziativität: es gilt $a*(b*c)=(a*b)*c$ für alle $a,b,c\in G$ .
+\item \begin{enumerate} \renewcommand{\labelenumi}{\emph{(\alph{enumi})}}
+\item Es existiert ein $e\in G$ mit linksneutraler Eigenschaft: $e*a=a$ für alle $a\in G$.
+\item Existenz von Linksinverse: zu jedem $a\in G$ gibt es ein $a'\in G$, sodass $a'*a=e$.
+\end{enumerate}
+\end{enumerate}
+Eine Gruppe heißt kommutativ, falls zusätzlich gilt $a*b=b*a\ \forall a,b\in G$. Typische Symbole für Verknüpfungen von Gruppen: $*,+,\cdot,\circ,\ldots$. Konvention: das Symbol \glqq$+$\grqq\ wird nur für kommutative Verknüpfungen verwendet. \\
+Wenn eine Verknüpfung assoziativ ist, kann man Klammern weglassen: $(a*b)*c=a*(b*c)=a*b*c$. Man lässt unter Umständen das Verknüpfungssymbol weg und schreibt $abc$ für $a*b*c$.
+\end{Definition}
+Abb$(X,X)$ ist wegen fehlender Inverse keine Gruppe. Betrachtet man jedoch nur die bijektiven Abbildungen, so ist $(S(X),\circ)$ eine Gruppe (die \textbf{symmetrische Gruppe von $\mathbf{X}$}) mit der Komposition $\circ$ von Funktionen als Verknüpfung, wobei $S(X)$ die Menge aller bijektiven Abbildungen von $X$ nach $X$ ist, für $X$ nichtleere Menge. Beispiele für kommutative Gruppen sind $(\Z,\cdot), (\Q,+), (\R,+), (\Q\setminus\{0\},\cdot),(\R\setminus\{0\},\cdot)$.
+\begin{Satz}
+Sei $(G,\cdot)$ eine Gruppe, dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\alph{enumi})}}
+\item Das neutrale Element $e$ ist eindeutig. Außerdem ist es auch rechtsneutral: $a\cdot e=a$ für alle $a\in G$.
+\item Das linksinverse Element $a'$ zu a bzgl. $e$ ist eindeutig und auch rechtsinverse, d.h. $a\cdot a'=e$. \underline{Notation:} Wir bezeichnen in einer Gruppe mit $a^{-1}$ das zu a inverse Element.
+\item Für alle $a,b\in G$ gilt: $\left(a^{-1}\right)^{-1}$ und $(a\cdot b)^{-1}=b^{-1}\cdot a^{-1}$
+\item Kürzungsregel: Seien $a,\tilde{x},x,\tilde{y},y\in G$. Wenn gilt $a\cdot \tilde{x}=a\cdot x$, dann auch $\tilde{x}=x$. Wenn $y\cdot a=\tilde{y}\cdot a$, dann auch $y=\tilde{y}$.
+\end{enumerate}
+\end{Satz}
+Sei $(G,\cdot)$ ein Paar aus einer Menge $G\neq \emptyset$ und einer Verknüpfung $\cdot$. Für $a\in G$ definieren wir die \textbf{Translationabbildung} $\tau_a: G\rightarrow G, x\mapsto \tau_a(x)=x\cdot a$, $_a\tau: G \rightarrow G, x\mapsto {}_a\tau(x)=a\cdot x$.
+\begin{Lemma}
+Ist $(G,\cdot)$ eine Gruppe, so sind für jedes $a\in G$ die Abbildungen $\tau_a$ und $_a\tau$ bijektiv. Sei $(G,\cdot)$ mit $\cdot$ assoziativ. Falls für alle $a\in G$ die Abbildungen $\tau_a$ und $_a\tau$ surjektiv sind, so ist $(G,\cdot)$ eine Gruppe.
+\end{Lemma}
+\paragraph{Verknüpfungstafeln:} Für eine $n$-elementige Menge $G=\{a_1,\ldots,a_n\}$ kann man im Prinzip die Verknüpfung durch Angabe aller Werte in einer quadratischen Tafel angeben. In der $i$-ten Zeile (Spalte) der Tafel stehen die Bilder der Translationsabbildungen ${}_{a_{i}}\tau$ (bzw. $\tau_{a_i}$). Da ${}_{a_{i}}\tau$ und $\tau_{a_i}$ in einer Gruppe bijektiv sind, muss in jeder Zeile und Spalte jedes Element genau einmal vorkommen.
+\begin{Definition}
+Sei $(G,\cdot)$ eine Gruppe. Eine nichtleere Teilmenge $G'\subseteq G$ heißt Untergruppe, falls gilt:
+\begin{itemize}
+\item für alle $a,b\in G'$ liegt auch $a\cdot b$ in $G'$,
+\item für alle $a\in G'$ liegt auch $a^{-1}$ in $G'$.
+\end{itemize}
+\end{Definition}
+\begin{Bemerkung}
+$G'$ ist selbst eine Gruppe bezüglich der eingeschränkten Verknüpfung $\cdot:G'\times G' \rightarrow G'$.
+\begin{itemize}
+\item Assoziativität: gilt in $G$, daher auch in $G'$
+\item neutrales Element: wegen $a\in G' \Rightarrow a^{-1}\in G' \Rightarrow e=a^{-1}\cdot a\in G'$. $e$ linksneutral in $G$, also auch in $G'$. Weiterhin ist $a^{-1}$ das linksinverse von $a$, sodass $G'$ alle Gruppeneigenschaften erfüllt.
+\end{itemize}
+Sei $X$ eine Menge, $Y\subseteq X$ eine Teilmenge. Dann ist $\{f:X\rightarrow X: f$ ist bijektiv, $f(y)=y\ \forall y\in Y\}$ eine Untergruppe von $(S(X),\circ)$.
+\end{Bemerkung}
+\begin{Definition}
+Seien $(G,\cdot)$ und $(H,*)$ zwei Gruppen. Eine Abbildung $\varphi: G\rightarrow H$ heißt \herv{Gruppenhomomorphismus}, falls $\varphi(a\cdot b)=\varphi(a)*\varphi(b)$ für alle $a,b\in G$.
+\end{Definition}
+\begin{Bemerkung}
+Sei $\varphi:G\rightarrow H$ ein Gruppenhomomorphismus. Dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\item Es gilt $\varphi(e)=\bar{e}$, wenn $e\in G$ bzw. $\bar{e}\in H$ die neutralen Elemente bezeichnen.
+\item Es gilt $\varphi(a)^{-1}=\varphi(a^{-1})$ für alle $a\in G$.
+\item Falls $\varphi$ bijektiv ist, so ist die Umkehrabbildung $\varphi^{-1}:H\rightarrow G$ auch ein Gruppenhomomorphismus.
+\end{enumerate}
+\end{Bemerkung}
+\begin{Bemerkung}\ 
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\item Sei $\varphi:G\rightarrow H$ ein Gruppenhomomorphismus. Dann ist das Bild Im$(\varphi)=\{h\in H:$ es gibt ein $g\in G$ mit $\varphi(g)=h\}$ eine Untergruppe von $(H,*)$.
+\item Sein $\psi: H\rightarrow K$ ein weiterer Gruppenhomomorphismus. Dann ist auch $\psi\circ\varphi:G\rightarrow K$ ein Gruppenhomomorphismus.
+\end{enumerate}
+\end{Bemerkung}
+\begin{Definition}
+Für alle $m\in\Z$ ist die Abbildung $m\cdot - :\Z\rightarrow\Z$ ein Endomorphismus von $(\Z,+)$. Also ist $m\Z=\emph{Im}(m\cdot -)=\{m\cdot a: a\in \Z\}$ die durch m teilbaren Zahlen eine Untergruppe von $(\Z,+)$.
+Zu $r,m \in \Z$ definieren wir die Menge $r + m\Z:=\{r+m\cdot a: a\in \Z\}$ als um $r$ verschobene Untergruppe $m\Z$ in $\Z$.
+\end{Definition}
+Weiter ist $0+m\Z=m\Z, m+m\Z=m\Z$.\\
+Sei nun $m\geq 1$ und $0\leq r\leq m-1$ \glqq die möglichen Reste bei Teilen durch $m$\grqq. $\Z=\bigcup_{r=0}^{m-1}{(r+m\Z)}$. Der Rest beim Teilen durch $m$ entscheidet, in welcher der Mengen in der Vereinigung eine ganze Zahl liegt. Die Mengen $0+m\Z,1+m\Z,2+m\Z,\ldots,(m-1)+m\Z$ sind disjunkt.
+\begin{Bemerkung}
+$a$ und $a'\in \Z$ liegen genau dann in derselben Restklasse modulo $m$, wenn gilt, dass $a-a'$ durch $m$ teilbar ist.
+\end{Bemerkung}
+Wenn ein $m\geq 1$ fixiert ist, schreiben wir kürzer $\bar{a}=a+m\Z$ für die Restklasse von $a$ modulo $m$. Dann gilt also $\bar{a}=\bar{a}' \Leftrightarrow a-a'$ ist durch $m$ teilbar.
+\begin{Definition}
+Für $m\geq 1$ ganze Zahl ist $\Z/m\Z$ die Menge aller Restklassen modulo m. $\Z/m\Z=\{r+m\Z:r\in\Z\}=\{0+m\Z,1+m\Z,\ldots,(m-1)+m\Z\}$. $+:\Z/m\Z\times\Z/m\Z\rightarrow\Z/m\Z$ ist definiert durch $(\bar{a},\bar{b})\mapsto \bar{a}+\bar{b}:=\overline{a+b}$. 
+\end{Definition}
+\begin{Satz}
+Sei $m\geq 1$ eine ganze Zahl. Dann bildet die Menge $\Z/m\Z=\{r+m\Z: r\in \Z\}=\{\bar{0},\bar{1},\ldots,\overline{m-1}\}$ eine kommutative Gruppe bezüglich $+:\Z/m\Z\times\Z/m\Z\rightarrow\Z/m\Z$, $(\bar{a},\bar{b})\mapsto \bar{a}+\bar{b}:=\overline{a+b}$. Außerdem ist die Restklassenabbildung $\Z\rightarrow \Z/m\Z$, $ a\mapsto a+m\Z=\bar{a}$ ein surjektiver Gruppenhomomorphismus.
+\end{Satz}
+$m=0: 0\Z=\{0\}, r+0\Z=\{r\}, Z/0\Z=\{\{r\}:r\in\Z\}$"$=$"$\Z$ unendliche zyklische Gruppe.\\
+zyklisch: Die Translationsabbildung $\tau_{\bar{1}}:\Z/m\Z\rightarrow\Z/m\Z$ \glqq rotiert\grqq\ die Elemente zyklisch.
+\section{Ringe, Körper}
+\begin{Definition}
+Ein Ring ist eine Menge R mit zwei binären Verknüpfungen $+:R\times R\rightarrow R, (a,b)\mapsto a+b$ und $\cdot :R\times R\rightarrow R, (a,b)\mapsto a\cdot b$ mit folgenden Eigenschaften:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(R\arabic{enumi})}}
+\item $(R,+)$ ist eine kommutative Gruppe. Notation: $0$ bezeichnet das bezüglich $+$ neutrale Element, $-a$ das bezüglich $a$ inverse Element.
+\item $\cdot$ ist assoziativ.
+\item Distributivgesetze: für alle $a,b,c\in R$ gilt:
+\begin{itemize}
+\item $a\cdot(b+c)=a\cdot b+ a\cdot c$ und
+\item $(a+b)\cdot c= a\cdot b + b\cdot c$
+\end{itemize}
+\end{enumerate}
+\glqq Punkt- vor Strichrechnung\grqq. \\
+Ein Ring heißt \herv{kommutativ}, wenn die Verknüpfung $\cdot$ kommutativ ist. Ein Element $1\in R$ heißt \herv{Einselement}, wenn gilt $1\cdot a=a=a\cdot 1\ \forall a\in R$ (d.h., $1$ ist beidseitig neutral \mbox{bezüglich $\cdot$).} \underline{Vorsicht:} Viele Quellen verlangen, dass ein Ring ein Einselement enthalten muss. 
+\end{Definition}
+\begin{Bemerkung}
+Wenn $0$ das neutrale Element bezüglich $+$ bezeichnet, so gilt $0\cdot a=0=a\cdot 0$ für alle $a\in R$
+\end{Bemerkung}
+\begin{Definition}
+Ein Ring heißt \herv{nullteilerfrei}, falls für alle $a,b\in R$ mit $a\cdot b=0$ schon folgt $a=0$ oder $b=0$. $\Leftrightarrow$ die Menge $R\setminus\{0\}$ ist abgeschlossen unter $\cdot$.
+\end{Definition}
+\begin{Lemma}
+Sei $m\geq 2$ eine ganze Zahl. Der Ring $\Z/m\Z$ ist genau dann nullteilerfrei, wenn $m$ eine Primzahl ist.
+\end{Lemma}
+\begin{Definition}
+Sei $(R,+,\cdot)$ ein Ring. Eine Teilmenge $R'\subseteq R$ heißt \herv{Unterring}, wenn $R'$ bezüglich $+$ eine Untergruppe ist und $R'$ ist bezüglich $\cdot$ abgeschlossen, d.h. für alle $a,b\in R'$ ist $a\cdot b\in R'$.
+\end{Definition}
+Wenn $R'$ ein Unterring von $(R,+,\cdot)$ ist, dann ist $(R',+,\cdot)$ ein Ring.
+\begin{Definition}
+Seien $(R,+,\cdot)$ und $(S,+,\cdot)$ Ringe. Eine Abbildung $\varphi: R\rightarrow S$ ist ein \herv{Ringhomomorphismus}, falls für alle $a,b\in R$ gilt, dass $\varphi(a+b)=\varphi(a)+\varphi(b)$ und $\varphi(a\cdot b)=\varphi(a)\cdot \varphi(b)$.
+\end{Definition}
+\begin{Definition}
+Ein Körper ist ein kommutativer Ring mit 1 mit der Eigenschaft, dass $(R\setminus\{0\},\cdot)$ eine Gruppe bildet.
+\end{Definition}
+Da $R\setminus\{0\}$ unter $\cdot$ abgeschlossen sein muss, muss ein Körper insbesondere nullteilerfrei sein.
+\begin{Definition}[(äquivalent zu oben)]
+Ein Körper ist eine Menge $K$ zusammen mit zwei binären Verknüpfungen $+$ und $\cdot$, sodass gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(K\arabic{enumi})}}
+\item $(K,+)$ ist eine abelsche (=kommutativ) Gruppe.
+\item Für alle $a,b\in K\setminus\{0\}$ ist $a\cdot b\neq 0$ und $(K\setminus\{0\},\cdot)$ bildet eine kommutative Gruppe.
+\item Für alle $a,b,c\in K$ gilt $a(b+c)=ab+bc$
+\end{enumerate}
+Schreibweise: für $a\neq 0$ ist $a^{-1}=\frac{1}{a}$ das multiplikativ Inverse zu a. $a^{-1}\cdot b=b\cdot a^{-1}=\frac{b}{a}$.
+\end{Definition}
+\begin{Bemerkung}
+Sei $K$ ein Körper und $a,b,x,\tilde{x}\in K$. Dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\item $0\neq 1$, ein Körper hat mindestens zwei Elemente.
+\item $0\cdot a=a\cdot 0=0$
+\item $a\cdot b=0 \Rightarrow a=0 \vee b=0$
+\item $a\cdot (-b)=-(a\cdot b)=(-a)\cdot b$
+\item Wenn $a\neq 0$ und $x\cdot a=\tilde{x}\cdot a$, dann gilt $x=\tilde{x}$
+\end{enumerate}
+\end{Bemerkung}
+\begin{Satz}
+$(\C,+,\cdot)$ (mit komplexer Multiplikation) bildet einen Körper.
+\end{Satz}
+Wir fassen $\R$ als Untergruppe von $\C$ auf. Vermöge der injektiven Abbildung $\R\rightarrow \C, a\mapsto (a,0)$, $(a,0)+(a',0)=(a+a',0) \Rightarrow$ Abbildung ist Ringhomomorphismus.
+\begin{Definition}
+$i=(0,1)$, $i^2=-1$.
+\end{Definition}
+Mit dieser Notation gilt folgendes: $(a,b)=a+b\cdot i$.
+\begin{Definition}[Komplexe Konjugation]
+$\bar{ }:\C\rightarrow \C$ ist definiert durch $\overline{(a,b)}=(a,-b)$. Äquivalent: $\overline{a+b i}=a-b i; a,b\in \R$
+\end{Definition}
+$\lambda \mapsto \bar{\lambda}$ für $\lambda\in\C$ ist Ringhomomorphismus.
+\begin{Definition}[Betrag Komplexer Zahlen]
+$|\cdot |:\C\rightarrow \R_{\geq 0}$ ist definiert durch $|(a,b)|=\sqrt{a^2+b^2}$, $|\lambda|=\sqrt{\lambda\bar{\lambda}}$. Eigenschaften: $|\lambda\mu|=|\lambda|\cdot |\mu|$, $|\lambda + \mu|\leq |\lambda|+|\mu|$
+\end{Definition}
+\begin{Lemma}
+Sei R endlicher nullteilerfreier, kommutativer Ring mit $1$ und $1\neq 0$. Dann ist R ein Körper. Insbesondere ist $\Z/p\Z=\mathbb{F}_p$ für jede Primzahl p ein Körper.
+\end{Lemma}
+Für einen Ring $R$ mit $1$ und $n\in\N$ definieren wir $n\cdot a:=\underbrace{a+a+\ldots+a}_{n-mal}, a\in R$.
+\begin{Definition}
+Sei R ein Ring mit 1. Die Charakteristik von R ist \\$\emph{char}(R)=\left\lbrace\begin{array}{ll}0,&\text{falls }n\cdot 1\neq 0\text{ in }R\text{ für alle }n\in\N\\
+\min\{n\in\N:n\cdot 1=0\}&\text{sonst}
+\end{array}\right.$
+\end{Definition}
+\begin{Lemma}
+Für jeden Körper K ist die Charakteristik $0$ oder eine Primzahl.
+\end{Lemma}
+\section{Polynome}
+\begin{Definition}
+Sei $R$ ein Ring mit $1$. Der \textbf{Polynomring} $R[t]$ ist die Menge aller Funktionen $R[t]:=\{f:\N\rightarrow\R:\text{ fast alle }f(i)=0\}=\{f:\N\rightarrow\R:\text{ die Menge }\{j:f(j)\neq 0\}\text{ ist endlich}\}$. \glqq fast alle\grqq=\glqq alle bis auf endlich viele\grqq. 
+\end{Definition}
+\begin{Definition}
+Wir definieren eine Addition auf $R[t]$ elementweise: $f,g\in\R[t]$, dann $(f+g)(i):=f(i)+g(i)$ für alle $i\in\N$. 
+\end{Definition}
+Sei $s(f)=\{j\in\N|f(j)\neq 0\}$, $s(g)=\{j\in\N|g(j)\neq 0\}$ (endlich für $f,g\in R[t]$). Dann $s(f+g)\subseteq s(f)\cup s(g)$ ist wieder eine endliche Menge. \\
+$(R[t],+)$ ist abelsche Gruppe, sogar eine Untergruppe von $(\{f:\N\rightarrow\R\},+)$. Neutrales Element bezüglich $+$ ist die Nullfunktion $0$, mit $0(j)=0$ für alle $j\in\N$.
+\begin{Definition}
+Wir definieren eine Multiplikation auf $R[t]$ wie folgt: $f,g\in R[t]: (f\cdot g)(j)=\sum_{i=0}^j{f(i)\cdot g(j-i)}$ für ein $j\in\N$. 
+\end{Definition} Wenn $f$ und $g$ fast überall $0$ sind, dann auch $f\cdot g$. Weiterhin ist $R[t]$ bezüglich $\cdot$ assoziativ.\\
+Wenn $R$ ein Ring mit $1$ ist, dann ist auch $(R[t],+,\cdot)$ ein Ring mit $1$; falls $R$ kommutativ ist, dann auch $R[t]$.\\
+Einselement: Sei $1\in R[t]$ die Funktion mit $1(j)=\left\lbrace\begin{array}{ll}1,&\text{falls }j=0\\
+0,&\text{sonst.}
+\end{array}\right.$ Es gilt $(1\cdot g)(j)=g(j)$.\\
+\begin{Definition}
+Die \glqq Unbestimmte\grqq\ ist wie folgt definiert: wir setzen $t\in R[t]:$ also $t(j)=\left\lbrace\begin{array}{ll}1,&\text{falls }j=1\\
+0,&\text{sonst.}
+\end{array}\right.$ 
+\end{Definition}
+Für alle $f\in R[t]$ gilt $f=\sum_{n\geq 0}{f(n)t^n}$ in $R[t]$. $t^n:=\underbrace{t\cdot t\cdot\ldots\cdot t}_{n-mal},t^0=1$. Für $a\in R, f\in R[t]$ ist $(a\cdot f)(j)=a\cdot f(j); a\cdot f\in R[t]$. Weiterhin ist $(t^n)(j)=\left\lbrace\begin{array}{ll}1,&\text{für }j=n\\0,&\text{sonst}\end{array}\right.$\\
+Sei $R$ ein Ring mit $1$, dann Polynomring $R[t]=\{f_0+f_1t+f_2t^2+\ldots+f_nt^n | n\geq 0, f_0,f_1,\ldots,f_n\in R\}$. $f+g=\sum_{i=0}^{n}{f_it^i}+\sum_{i=0}^{n}{g_it^i}=\sum_{i=0}^{n}{(f_i+g_i)t^i}$. $\left(\sum_{i=0}^{n}{f_it^i}\right)\cdot \left(\sum_{i=0}^{n}{g_it^i}\right)=f_0g_0+(f_1g_0+f_0g_1)t+\ldots+\left(\sum_{i=0}^{j}{f_ig_{j-i}t^i}\right)+\ldots$.\\
+\begin{Definition}
+Sei $f\in R[t]$ ein Polynom mit Koeffizienten in einem Ring $R$ mit $1$. Dann definiert f eine Polynomfunktion $\tilde{f}:R \rightarrow R$ definiert durch: $f=f_0+f_1t^1+\ldots+f_nt^n$, dann ist $\tilde{f}(\lambda):=f_0+f_1\lambda+\ldots+f_n\lambda^n=\sum_{j\geq 0}^n{f(j)\lambda^j}$ für $\lambda\in R$.
+\end{Definition}
+Man kann dies auffassen als eine Abbildung. $R[t]\rightarrow $Abb$(R,R), f\mapsto \tilde{f}$. Typischerweise ist nicht jede Funktion von $R$ nach $R$ von der Form $\tilde{f}$ für ein Polynom $f$.
+\begin{Definition}
+Sei $f\in R[t]$ ein Polynom. Der \herv{Grad} von f ist\\ $\deg(f)=\left\lbrace\begin{array}{ll} -\infty,&\text{falls }f=0\\ \max\{j: f(j)\neq 0\},&\text{sonst.}\end{array} \right.$ $\deg(f_0+f_1t+\ldots+f_nt^n)=n$ falls $f_n\neq 0$.
+\end{Definition}
+Falls $R$ nullteilerfrei ist (z.B. ein Körper), dann gilt: $\deg(f\cdot g)=deg(f)+deg(g)$.
+\begin{Satz}
+Sei K ein Körper und $f,g\in K[t]$ mit $g\neq 0$. Dann gibt es eindeutig bestimmte Polynome $q,r\in K[t]$ mit $f=q\cdot g+r$ und $\deg(r)<\deg(q)$.
+\end{Satz}
+Sei $K$ ein endlicher Körper $K=\{a_0,\ldots,a_n\}$ und $f=(t-a_0)(t-a_1)\cdot\ldots\cdot(t-a_n)+1$ hat Grad $n+1$ und keine Nullstelle, es gilt $f(\lambda)=1$ für alle $\lambda\in K$.
+\begin{Lemma}
+Sei $\lambda\in K$ eine Nullstelle des Polynoms $f\in K[t]$. Dann gibt es ein eindeutig bestimmtes Polynom $g\in K[t]$ mit $f=(t-\lambda)\cdot g$ und $\deg(g)=\deg(f)-1$.
+\end{Lemma}
+\begin{Korollar}
+Sei $f\in K[t]$ ein Polynom mit $f\neq 0$ vom Grad n. Dann hat f höchstens n verschiedene Nullstellen.
+\end{Korollar}
+\begin{Korollar}
+Für jeden unendlichen Körper $K$ ist die Abbildung $K[t]\rightarrow \emph{Abb}(K,K), f\mapsto \tilde{f}$ injektiv.
+\end{Korollar}
+\begin{Definition}
+Sei $K$ ein Körper, $0\neq f\in K[t]$ und $\lambda\in K$. Die \herv{Vielfachheit (Multiplizität)} von $\lambda$ in $f$ ist $\mu(f;\lambda)=\max\{r\in\N:f=(t-\lambda)^r\cdot g$ für ein $g\in K[t]\}$.
+\end{Definition}
+\begin{Bemerkung}
+Also $f(\lambda)=0\Leftrightarrow \mu(f,\lambda)\geq 1$. Wenn $f=(t-\lambda)^r\cdot g$ und $r=\mu(f;\lambda)$, dann ist $g(\lambda)\neq 0$. $\mu(f;\lambda)$ gibt an \glqq wie oft\grqq\ $(t-\lambda)$ in $f$ enthalten ist.
+Für $K=\R,\C$ (also für char$(K)=0$) ist $\mu(f;\lambda)=\max\{r\in \N: f(\lambda)=f'(\lambda)=\ldots=f^{(r-1)}(\lambda)=0\}$. Für $f=a_0+a_1t+\ldots+a_nt^n$ definiere $f'=a_1+2a_2t+3a_3t^2+\ldots+na_nt^{n-1}$.\end{Bemerkung}
+\begin{Bemerkung}
+Sind $\lambda_1,\ldots,\lambda_k\in K$ die paarweise verschiedene Nullstellen eines Polynoms $f\in K[t]$ mit Vielfachheiten $r_i=\mu(f;\lambda_i)$, dann gilt $f=(t-\lambda_1)^{r_1}(t-\lambda_2)^{r_2}\cdot\ldots\cdot(t-\lambda_k)^{r_k}\cdot g$ für ein Polynom $g$ ohne Nullstelle.
+\end{Bemerkung}
+Ein Körper, über den jedes Polynom vom Grad mindestens $1$ eine Nullstelle hat, heißt \textbf{algebraisch abgeschlossen}. Endliche Körper sind nicht algebraisch abgeschlossen. $\R$ ist nicht algebraisch abgeschlossen ($f=t^2-1$ hat keine Nullstellen in $\R$)
+\begin{Satz}[Fundamentalsatz der Algebra]
+$\C$ ist algebraisch abgeschlossen, d.h. sei $f\in \C[t]$ mit $\deg(f)\geq 1$, dann hat f mindestens eine Nullstelle.
+\end{Satz}
+\begin{Korollar}
+Sei K ein algebraisch abgeschlossener Körper (z.B. $K=\C$) und $f\in K[t]$ ein Polynom mit $\deg(f)\geq 1$. Dann zerfällt $f$ vollständig in Linearfaktoren, d.h. es gibt $a,\lambda_1,\lambda_2,\ldots,\lambda_n\in K$ mit $f=a(t-\lambda_1)(t-\lambda_2)\cdot\ldots\cdot(t-\lambda_n), n=\deg(f)$.
+\end{Korollar}
+\begin{Lemma}
+Sei $f\in\R[t]$ und sei $\lambda\in\C$ eine komplexe Nullstelle von $f$. Dann ist auch die komplexe konjugierte Zahl $\bar{\lambda}$ eine Nullstelle von f und es gilt sogar $\mu(f;\lambda)=\mu(f;\bar{\lambda})$. Mit anderen Worten: die komplexen Nullstellen eines reellen Polynoms liegen symmetrisch zur reellen Achse.
+\end{Lemma}
+\begin{Satz}
+Jedes Polynom $f\in \R[t]$ hat eine Darstellung $f=a\cdot(t-\lambda_1)\cdot\ldots\cdot(t-\lambda_k)\cdot   g_{k+1}\cdot g_{k+3}\cdot\ldots\cdot g_{n-1}$, wobei $\lambda_1,\ldots,\lambda_k \in \R$ und $g_{k+1},\ldots,g_{n-1}\in \R[t]$ quadratisch und haben keine reellen Nullstellen.
+\end{Satz}
+\begin{Korollar}
+Jedes Polynom $f\in\R[t]$ von ungeradem Grad hat eine reelle Nullstelle.
+\end{Korollar}
+Für Polynome ersten bis vierten Grades lassen sich Formeln ihrer Nullstellen angeben, für Polynome höheren Grades ist das im Allgemeinen nicht mehr möglich.\\
+Wenn der Koeffizient höchstens Grades eines Polynoms $1$ ist, so lässt es sich aus seinen Nullstellen eindeutig konstruieren.
+\begin{Satz}[Vieta]
+Für $f=t^n+a_{n-1}t^{n-1}+\ldots+a_0=(t-\lambda_1)(t-\lambda_2)\cdot\ldots\cdot(t-\lambda_n)$ gilt $a_k=(-1)^{n-k}S_{n-k}(\lambda_1,\ldots,\lambda_2)$, wobei $S_k(\lambda_1,\ldots,\lambda_n)=\sum_{1\leq i_1\leq i_2\leq\ldots\leq i_k\leq n}{\lambda_{i_1}\lambda_{i_2}\ldots\lambda_{i_k}}$ .
+\end{Satz}
+\begin{Satz}
+Angenommen $f=t^n+a_{n-1}t^{n-1}+\ldots+a_0$, erfülle $a_0\neq 0$ und habe n reelle Nullstellen. Dann
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\alph{enumi})}}
+\item $\lambda_1,\ldots,\lambda_n<0 \Leftrightarrow a_0,\ldots,a_{n-1}>0$,
+\item $\lambda_1,\ldots,\lambda_n>0 \Leftrightarrow (-1)^{n-j}a_j>0$ für $j=0,\ldots,n-1$ .
+\end{enumerate}
+\end{Satz}
+$f_{-}=t^n-a_{n-1}t^{n-1}+a_{n-2}t^{n-2}+\ldots+(-1)^n a_0$.\\
+Notation: Sei $f=t^n+a_{n-1}t^{n-1}+\ldots+a_0\in\R[t]$. Dann sei $N_{+}(f) = $ Anzahl der positiven Nullstellen, $N_{-}(f) = $ Anzahl der negativen Nullstellen und $Z(f) = $ Anzahl der Vorzeichenwechsel der Koeffizienten in $f$.
+\begin{Satz}[Vorzeichenregel von Descartes]
+Sei $f=t^n+a_{n-1}t^{n-1}+\ldots+a_0\in\R[t]$ mit $a_o\neq 0$. Dann $N_{+}\leq Z(f)$ und $N_{-}(f)\leq Z(f_{-})$
+\end{Satz}
+\section{Vektorräume}
+\begin{Definition}
+Sei K ein Körper. Ein \herv{K-Vektorraum} ist ein Tripel $(V,+,\cdot)$ bestehend aus einer Menge V, einer Verknüpfung $+:V\times V \rightarrow V$ und einer Verknüpfung $\cdot : K\times V \rightarrow V$, sodass gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(V\arabic{enumi})}}
+\item $(V,+)$ bildet eine abelsche Gruppe.
+\item Für alle $\lambda, \mu \in K,$  $ v,w\in V$ gelten \\
+$(\lambda+\mu)\cdot v=\lambda \cdot v+ \mu\cdot v$ ,\quad $\lambda\cdot (v+w)=\lambda\cdot v+ \lambda \cdot w$,\quad $\lambda\cdot (\mu\cdot v)=(\lambda\cdot\mu)\cdot v$,\quad $1\cdot v=v$.
+\end{enumerate}
+\end{Definition}
+\begin{Beispiel}
+\begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+\item \glqq Standardvektorraum\grqq\ $K^n$ für $n=1,2,3,\ldots$ mit komponentenweiser Addition sowie gewohnter Multiplikation mit einem Skalar.
+\item Die Menge $M(m\times n,K)$ aller $m\times n$-Matrizen $A=(a_{ij})_{i=1,\ldots,m,\ j=1,\ldots,n}$ mit $a_{ij}\in K$ bildet Vektorraum mit Matrixaddition und Multiplikation mit einem Skalar.
+\item $\C$ ist ein $\R$-Vektorraum vermöge $\lambda\in\R, (a,b)=a+bi\in\C$, $\lambda(a+bi)=\lambda a+(\lambda b) i$\\
+Allgemeiner: Sei $L$ ein Ring mit $1$ und $K\subseteq$ ein Teilring (mit $1$), der ein Körper ist. Dann wird $L$ ein $K$-Vektorraum vermöge der eingeschränkten Addition und Multiplikation in $L$.
+\item Der Polynomring $K[t]$ ist ein $K$-Vektorraum vermöge der Addition in $K[t]$ und der Skalarmultiplikation definiert als $\lambda(a_0+a_1t^1+\ldots+a_nt^n)=(\lambda a_0)t_0+(\lambda a_1)t^1+\ldots+(\lambda a_n)t^n; \lambda_ia_i \in K$
+\item  Sei $M$ eine Menge. Die Menge Abb($(M,K)$ aller Abbildungen $f:M\rightarrow K$ bildet einen $K$-Vektorraum vermöge: $f,g\in$Abb$(M,K),\lambda\in K$ $(f+g)(m)=f(m)+g(m)$ für alle $m\in M$ und $(\lambda\cdot f)(m)=\lambda\cdot f(m)$.
+\end{enumerate}
+\end{Beispiel}
+\begin{Bemerkung}
+In jedem $K$-Vektorraum $V$ gelten folgende Regeln für alle $\lambda\in K, v\in V$:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+\item $0\cdot v=0$
+\item $\lambda\cdot 0=0$
+\item $\lambda\cdot v=0$, dann gilt $v=0$ oder $\lambda=0$
+\item $(-1)\cdot v=-v$
+\end{enumerate}
+\end{Bemerkung}
+\begin{Definition}
+Sei V ein K-Vektorraum und $W\subseteq V$ eine Teilmenge. $W$ heißt \herv{Untervektorraum}, falls gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\underline{UV\arabic{enumi}}}}
+\item $W$ ist nicht leer.
+\item abgeschlossen bezüglich Addition: für alle $v,w\in W$ ist $v+w\in W$.
+\item abgeschlossen bezüglich Skalarmultiplikation: für alle $\lambda\in K, w\in W$ ist $\lambda \cdot W\in W$.
+\end{enumerate}
+\end{Definition}
+\begin{Satz}
+Sei $W\subseteq V$ ein Untervektorraum. Dann ist W selbst ein Vektorraum (mit den eingeschränkten Verknüpfungen $+$ und $\cdot$ )
+\end{Satz}
+\begin{Lemma}
+Sei V ein Vektorraum, $I$ eine Menge und $(W_i)_{i\in I}$ eine Familie von Untervektorräumen von $V$. Dann ist der Durchschnitt $W=\bigcap_{i\in I} W_i=\{w\in V:$ für alle $i\in I$ gilt $w\in W_i\}$ wieder ein Untervektorraum von V.
+\end{Lemma}
+\begin{Lemma}
+Seien $W,W'$ Untervektorräume eines K-Vektorraums V. Falls $W\cup W'$ auch ein Untervektorraum ist, dann gilt $W\subseteq W'$ oder $W'\subseteq W$.
+\end{Lemma}
+\section{Erzeugendensystem, Lineare Unabhängigkeit, Basis und Dimension}
+\begin{Definition}
+Sei $V$ ein $K$-Vektorraum und $(v_i)_{i\in I}$ eine Familie von Vektoren aus $V$. Ein $v\in V$ heißt Linearkombination von $(v_i){i\in I}$, falls es endlich viele $i_1,\ldots,i_r\in I$ und Skalare $\lambda_1,\ldots,\lambda_r\in K$ gibt, mit $v=\lambda_1 v_{i_1}+\lambda_2 v_{i_2}+\ldots+\lambda_r v_{i_r}$. Der \herv{Span} der Familie $(v_i)_{i\in I}$ ist die Menge aller Linearkombinationen, die man so erhält.\\
+\emph{span}$(v_i)_{i\in I} = \emph{span}_K(v_i)_{i\in I}= \{v\in V: v$ ist Linearkombination von $(v_i)_{i\in I} \}$. 
+\end{Definition}
+Für den Spezialfall $I=\{1,\ldots,n\}$ ist span$(v_i)_{i\in \{1,\ldots,n\}}=$span$(v_1,\ldots,v_n)=\{\lambda_1 v_1 + \ldots + \lambda_n v_n : \lambda_1,\ldots,\lambda_n\in K\}=Kv_1+Kv_2+\ldots+Kv_n$
+\begin{Lemma}
+Sei V ein K-Vektorraum und $(v_i)_{i\in I}$ eine Familie von Elementen aus V. Dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\alph{enumi})}}
+\item $\emph{span}(v_i)_{i\in I}$ ist ein Untervektorraum von V
+\item Sei W ein Untervektorraum von V mit $v_i\in W$ für alle $i\in I$. Dann gilt $\emph{span}(v_i)_{i\in I}\subseteq W$.
+\end{enumerate}
+\end{Lemma}
+Sei $M\subseteq V$ eine Teilmenge. Wir fassen $M$ als eine $M$-indizierte Familie auf. Und setzen span$(M)=$span$(m)_{m\in M}=\{v\in V:$ es gibt $m_1,\ldots,m_r\in M, \lambda_1,\ldots,\lambda_r\in K$ mit $v=\lambda_1m_1+\ldots+\lambda_rm_r\}$. $M\subseteq$span$(M)\subseteq V$ und span$(M)$ ist der kleinste Untervektorraum von $V$, der die Menge $M$ enthält.
+\begin{Definition}
+Sei $V=K^n$ K-Vektorraum. Für $1\leq i\leq n$ definieren wir $e_i\in K^n$ als $e_i=(0,\ldots,0,1,0,\ldots,0)$ ($1$ an der i-ten Stelle, sonst Null).
+\end{Definition}
+Für $\lambda_1,\lambda_2,\ldots,\lambda_n\in K$ gilt $(\lambda_1,\ldots,\lambda_n)=(\lambda_1,0,\ldots,0)+(0,\lambda_2,0,\ldots,0)+\ldots+(0,\ldots,0,\lambda_n)=\lambda_1e_1+\lambda_2e_2+\ldots+\lambda_ne_n$. Also gilt span$(e_i)_{i=1,\ldots,n}=K^n$. $K[t]=$span$(t^n)_{n\in\N\cup 0}$ \\
+Sei $\bar{V}=$Abb$(\N,K)$ mit elementweiser $K$-Vektorraumstruktur. Dann ist $K[t]$ ein Untervektorraum von Abb$(\N,K)$.\\
+Es ist immer $0\in$span$(v_i)_{i\in I}$. Für jede endliche Teilmenge $i_1,\ldots,i_r$ gibt es immer die \textbf{triviale Linearkombination} $0=0\cdot v_{i_1}+0\cdot v_{i_2}+\ldots+0\cdot v_{i_r}$.
+\begin{Definition}
+Sei V ein K-Vektorraum und $(v_1,\ldots,v_r)$ eine Familie aus Vektoren aus V. $(v_1,\ldots,v_r)$ heißt \herv{linear unabhängig}, wenn für alle $\lambda_1 ,\ldots , \lambda_r\in K$ mit $0=\lambda_1 v_1+\ldots+\lambda_r v_r$ gilt $\lambda_1=\lambda_2=\ldots=\lambda_r=0$. Eine beliebige Familie $(v_i)_{i\in I}$ von Vektoren aus V heißt linear unabhängig, wenn jede endliche Teilfamilie linear unabhängig ist, d.h. für jede endliche Teilmenge $J=\{i_1,\ldots,i_r : i_j\neq i_{j'}$ für $j\neq j'\}\subseteq I$.
+\end{Definition}
+\begin{Lemma}
+Sei $(v_i)_{i\in I}$ eine Familie von Vektoren eines K-Vektorraums V. Dann sind äquivalent:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $(v_i)_{i\in I}$ ist linear unabhängig
+\item Jeder Vektor $v\in$\emph{span}$(v_i)_{i_I}$ lässt sich auf genau eine Weise als Linearkombination der $v_i$ schreiben.
+\end{enumerate}
+\end{Lemma}
+\begin{Bemerkung}\mbox{ }
+\begin{itemize}
+\item Ein einzelner Vektor $v\in V$ ist genau dann linear unabhängig, wenn $v\neq 0$.
+\item Ist $v_i=0$ für ein $i\in I$, dann ist $(v_i)_{i\in I}$ linear abhängig.
+\item Ist $v_i=v_j$ für ein $i\neq j \in I$, so ist $(v_i)_{i\in I}$ linear abhängig.
+\item Sei $r\geq 2, (v_1,\ldots,v_r)$ ist genau dann linear abhängig, wenn einer der Vektoren eine Linearkombination der anderen ist.
+\end{itemize}
+\end{Bemerkung}
+\begin{Definition}
+Eine Familie $\mathcal{B}=(v_i)_{i\in I}$ von Vektoren aus einem K-Vektorraum V heißt \herv{Basis von V}, falls $\mathcal{B}$ \herv{Erzeugendensystem} von V ist, d.h. $V=$\emph{span}$(v_i)$ und $\mathcal{B}$ linear unabhängig ist. V heißt \herv{endlich erzeugt}, falls V ein endliches Erzeugendensystem hat.
+\end{Definition}
+\begin{Satz}
+Sei $\mathcal{B}=(v_1,\ldots,v_r)$ eine Familie von Vektoren aus V. $V\neq \{0\}$. Dann sind äquivalent:
+\begin{itemize}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $\mathcal{B}=(v_1,\ldots,v_r)$ ist eine Basis, d.h. linear unabhängiges Erzeugendensystem.
+\item $\mathcal{B}$ ist ein \herv{unverkürzbares Erzeugendensystem}, d.h. für alle $j\in \{1,\ldots,r\}$ ist $(v_1,\ldots,v_{j-1},v_{j+1},\ldots,v_r)$ kein Erzeugendensystem.
+\item Zu jedem $v\in V$ gibt es eindeutig bestimmte $\lambda_1,\ldots,\lambda_r\in K$ mit $v=\lambda_1 v_1+\ldots+\lambda_r v_r$.
+\item $\mathcal{B}$ ist \herv{unverlängerbar linear unabhängig}, d.h. für alle $v\in V$ ist $(v_1,\ldots,v_r,v)$ linear abhängig. 
+\end{itemize}
+\end{Satz}
+\begin{Bemerkung}
+Sie $V$ ein $K$-Vektorraum, der nicht endlich erzeugt ist. Dann gibt es in $V$ eine unendlich linear unabhängige Familie.
+\end{Bemerkung}
+\begin{Korollar}
+Jeder endlich erzeugte Vektorraum besitzt eine Basis.
+\end{Korollar}
+\begin{Satz}
+Jeder Vektorraum hat eine Basis.
+\end{Satz}
+\begin{Lemma}[Austauschlemma]
+Sei V ein K-Vektorraum mit Basis $\mathcal{B}=(v_1,\ldots,v_r)$ und $w=\lambda_1 v_1+\ldots+\lambda_r v_r$ mit $\lambda_1,\ldots,\lambda_r\in K$. Wenn für ein $j\in\{1,\ldots,r\}$ gilt, dass $\lambda_j\neq 0$, dann ist $\mathcal{B}'=(v_1,\ldots,v_{j-1},w,v_{j+1},\ldots,v_r)$ auch eine Basis.
+\end{Lemma}
+\begin{Satz}[Austauschsatz]
+Sei $\mathcal{B}=(v_1,\ldots,v_r)$ eine Basis des K-Vektorraums V und $(w_1,\ldots,w_n)$ eine linear unabhängige Familie. Dann gilt $n\leq r$ und es gibt paarweise verschiedene Indizes $i_1,\ldots,i_n\in \{1,\ldots,r\}$, sodass nach Ersetzen von $v_{i_j}$ durch $w_j$ eine neue Basis von V entsteht. Nach Umordnung können wir also annehmen, dass $i_1=1,i_2=2,\ldots,i_n=n$ und die neues Basis damit $(w_1,\ldots,w_n,v_{n-1},\ldots,v_r)$ ist.
+\end{Satz}
+\begin{Korollar}
+Hat ein K-Vektorraum eine endliche Basis, dann ist jede Basis endlich.
+\end{Korollar}
+\begin{Korollar}
+Je zwei endliche Basen eines Vektorraums haben gleich viele Elemente.
+\end{Korollar}
+\begin{Definition}
+Sei V ein K-Vektorraum. Die \herv{Dimension} von V ist definiert als $\dim_K(V)=\dim(V)=\left\lbrace\begin{array}{ll} r,&\text{falls }V\text{ eine endliche Basis mit }r\text{ Elementen hat,}\\\infty,&\text{falls }V\text{ nicht endlich erzeugt ist.} \end{array}\right.$
+\end{Definition}
+Sei $M$ eine Menge. Dann gilt $\dim_K($Abb$(M,K))=\left\lbrace\begin{array}{ll}|M|,&\text{falls }M\text{ endlich ist,}\\ \infty,&\text{falls }M\text{ unendlich ist.}\end{array}\right.$
+\begin{Korollar}
+Ist $W\subseteq V$ ein Untervektorraum eines endlich erzeugten K-Vektorraums V, dann ist auch W endlich erzeugt. Außerdem gilt $\dim(W)\leq \dim(V)$. Falls $\dim(W)=\dim(V)$, dann gilt schon $W=V$.
+\end{Korollar}
+\begin{Satz}[Basisergänzungssatz]
+Sei $(w_1,\ldots,w_n)$ eine linear unabhängige Familie in einem endlich erzeugten K-Vektorraum V. Dann gibt es Vektoren $w_{n+1},\ldots,w_r$, sodass $\mathcal{B}=(w_1,\ldots,w_n,w_{n+1},\ldots,w_r)$ eine Basis von V ist.
+\end{Satz}
+\begin{Bemerkung}
+Da span$(a_1,\ldots,a_n)$ ein Untervektorraum von $K^n$ ist, ist dieser span endlichdimensional und $\dim($span$(a_1,\ldots,a_n))\leq \dim(K^n)=n$.
+\end{Bemerkung}
+Betrachte die Vektoren $a_1,\ldots,a_m$ und die $m\times n$-Matrix \\$A=(a_{ij})=(a_i)_j=\left(\begin{matrix}
+a_{11} & a_{12} & \ldots & a_{1n}\\
+\vdots & \vdots & \ddots & \vdots \\
+a_{i1} & a_{i2} & \ldots & a_{in} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \ldots & a_{mn}
+\end{matrix} \right) \begin{array}{l}
+\gets a_1 \\
+\quad ~~ \vdots\\
+\gets a_i \\
+\quad ~~\vdots\\
+\gets a_m \end{array}$ \\
+Elementare Zeilenumformungen für $m\times n$-Matrizen über \\
+\begin{tabular}{p{0.48\textwidth}p{0.48\textwidth}}
+I Multiplikation der $i$-ten Zeile mit $\lambda \in K\setminus\{0\}$ & II Addition der $j$-ten Zeile zur $i$-ten Zeile $(i\neq j)$ \\
+$A=\left(\begin{array}{c}
+\vdots \\ a_i \\ \vdots
+\end{array} \right) \mapsto \left(\begin{array}{c}
+\vdots \\ \lambda a_i \\ \vdots
+\end{array} \right)$ & $A=\left(\begin{array}{c}
+\vdots \\ a_i \\ \vdots \\ a_j \\ \vdots
+\end{array} \right) \mapsto \left(\begin{array}{c}
+\vdots \\ a_i +a_j \\ \vdots \\ a_j \\ \vdots
+\end{array} \right)$
+\end{tabular}
+\begin{tabular}{p{0.48\textwidth}p{0.48\textwidth}}
+III Addition des $\lambda$-fachen der $j$-ten Zeile zur $i$-ten Zeile $(\lambda \in K\setminus\{0\}, i\neq j )$ & IV Vertauschen der $i$-ten und $j$-ten Ziele $(i\neq j)$\\
+$A=\left(\begin{array}{c}
+\vdots \\ a_i \\ \vdots \\ a_j \\ \vdots
+\end{array} \right) \mapsto \left(\begin{array}{c}
+\vdots \\ a_i +\lambda a_j \\ \vdots \\ a_j \\ \vdots
+\end{array} \right)$ Kombination von I und II & $A=\left(\begin{array}{c}
+\vdots \\ a_i \\ \vdots \\ a_j \\ \vdots
+\end{array} \right) \mapsto \left(\begin{array}{c}
+\vdots \\ a_j \\ \vdots \\ a_i \\ \vdots
+\end{array} \right)$ Kombination von I und II
+\end{tabular}
+\begin{Definition}
+Der Zeilenraum \emph{ZR}$(A)$ von $A\in M(m\times n,K)$ ist der Untervektorraum \emph{span}$(a_1\ldots,a_m)\subseteq K^n$, der von den Zeilen $a_1,\ldots,a_m$ der Matrix erzeugt wird.
+\end{Definition}
+\begin{Lemma}
+Die Matrix B entstehe aus A durch endlich viele elementare Zeilenumformungen. Dann gilt \emph{ZR}$(B)=$\emph{ZR}$(A)$.
+\end{Lemma}
+\begin{Satz}
+Jede Matrix in $M(m\times n,K)$ kann durch endlich viele elementare Zeilenumformungen auf Zeilenstufenform gebracht werden.
+\end{Satz}
+Sei $B$ eine Matrix in Zeilenstufenform. Dann sind $b_1,\ldots,b_r$ linear unabhängig. %ToDo: Put Matrix-Image here
+ZR$(B)=$ span$(b_1,\ldots,b_m)=$ span$(b_1,\ldots,b_r)$. $(b_1,\ldots,b_r)$ ist eine Basis von ZR$(B)$.
+\subsection*{Transposition}
+Sei $A\in M(m\times n,K)$. Die \textbf{transponierte Matrix} $^tA\in M(n\times m,K)$ erhält man durch Spiegeln an der Diagonalen / Vertauschen von Zeilen und Spalten. Formal: Wenn $A=(a_{ij})_{i=1,\ldots,m; j=1,\ldots,n}$, dann ist $^tA=(a'_{ij})_i=1,\ldots,n; j=1,\ldots,m$ mit $a'_{ij}=a_{ji}$.\\
+Eigenschaften: $A,B\in M(m\times n,K), \lambda\in K$ $^t(A+B)=\presuper tA + \presuper tB$, $\presuper t{(\lambda A)}=\lambda \presuper tA$, $\presuper t{(\presuper t{(A)})}=A$. \\
+Also ist Transposition $\presuper t\ : M(m\times n,K) \rightarrow M(n\times m, K)$ bijektiv.\\
+Der \textbf{Spaltenraum} einer Matrix $A\in M(m\times n,K)$ ist der Raum SR$(A)=$span($n$ Spalten von $A)=$span($a^1,\ldots,a^n)\subseteq K^m$. $A=(a^1,\ldots,a^m)$.\\
+ZR($A)\subseteq K^n$, SR$(A)\subseteq K^m$, SR$(A)=$ZR$(\presuper tA)$, ZR$(A)=$SR$(\presuper tA)$.
+\begin{Satz}
+Für alle $A\in M(m\times n, K)$ gilt \herv{Zeilenrang} $=\dim(\emph{ZR}(A))=\dim(\emph{SR}(A))=$ \herv{Spaltenrang}.
+\end{Satz}
+\section{Summen von Untervektorräumen}
+\begin{Definition}
+Sei V ein K-Vektorraum mit Untervektorräumen $W_1,\ldots,W_r$ $(r\geq 2)$. Die Summe ist definiert als: $W_1+\ldots+W_r=\{v\in V:$ es gibt $w_1\in W_1,\ldots, w_r\in W_r$ mit $v=w_1+\ldots+w_r\}$
+\end{Definition}
+\begin{Bemerkung}
+Es gilt: \begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+\item $W_1+\ldots+W_r$ ist ein Untervektorraum von $V$.
+\item $W_1+\ldots+W_r=$span$(W_1\cup W_2\cup \ldots \cup W_r)$.
+\item $\dim(W_1+\ldots+W_r)\leq \dim(W_1)+\ldots+\dim(W_r)$.
+\end{enumerate}
+\end{Bemerkung}
+\begin{Satz}[Dimensionsformel für Summen]
+Seien $W_1$ und $W_2$ Untervektorräume eines Vektorraums V, $W_1$ und $W_2$ endlichdimensional. Dann gilt $\dim(W_1+W_2)=\dim(W_1)+\dim(W_2)-\dim(W_1\cap W_2)$.
+\end{Satz}
+\begin{Lemma}
+Sei $V=W_1+W_2$ endlich erzeugter K-Vektorraum. Dann sind äquivalent: \begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $W_1\cap W_2=\{0\}$
+\item Für jedes $v\in V$ gibt es eindeutig bestimmte $w_1\in W_1$ und $w_2\in W_2$ mit $v=w_1+w_2$.
+\item Sei $w_1 \in W_1\setminus\{0\}$ und $w_2\in W\setminus\{0\}$, dann ist $(w_1,w_2)$ linear unabhängig.
+\item $\dim(V)=\dim(W_1)+\dim(W_2)$.
+\end{enumerate}
+\end{Lemma}
+\begin{Definition}
+Seien $W_1, W_2$ Untervektorräume des K-Vektorraums V. V heißte \herv{direkte Summe} von $W_1$ und $W_2$, falls gilt $V=W_1+W_2$ und $W_1\cap W_2=\{0\}$. Notation $V=W_1+\oplus W_2$.
+\end{Definition}
+\begin{Satz}
+Seien $W_1, W_2$ Untervektorräume von V (V endlichdimensional). Dann sind äquivalent:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $V=W_1\oplus W_2$
+\item Es gibt Basen $(w_1,\ldots,w_k)$ von $W_1$ und $(w'_1,\ldots,w'_l)$ von $W_2$, sodass $(w_1,\ldots,w_k,w'_1,\ldots,w'_l)$ eine Basis von V ist.
+\item $V=W_1+W_2$ und $\dim(V)=\dim(W_1)+\dim(W_2)$
+\end{enumerate}
+\end{Satz}
+\begin{Korollar}
+Sei V endlichdimensionaler Vektorraum und $W\subseteq V$ ein Untervektorraum. Dann gibt es einen Untervektorraum $W'$ von V mit $V=W\oplus W'$.
+\end{Korollar}
+\begin{Definition}
+Seien $W_1,\ldots,W_r$ Untervektorräume von V. V heißt die \herv{direkte Summe} der $W_i$; $V=W_1\oplus W_2\oplus \ldots \oplus W_r = \bigoplus _{i=1}^r{W_i}$, falls \begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\underline{DS\arabic{enumi}}}}
+\item $V=W_1+\ldots+W_r$
+\item $w_1\in W_1, w_2\in W_2,\ldots,w_r\in W_r$ von $0$ verschiedene Vektoren. Dann ist $(w_1,\ldots,w_r)$ linear unabhängig.
+\end{enumerate}
+\end{Definition}
+\begin{Satz}
+Seien $W_1,\ldots,W_k$ Untervektorräume eines endlichdimensionalen Vektorraums V. Dann sind äquivalent:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $V=W_1\oplus \ldots \oplus W_k$
+\item Sei für jedes $i=1,\ldots,k$ eine Basis $\mathcal{B}^{(i)}=(v_1^{(i)},\ldots,v_{r_i}^{(i)})$ von $W_i$ gegeben, so ist $\mathcal{B}:=(v_1^{(1)},\ldots,v_{r_1}^{(1)},\ldots,v_1^{(k)},\ldots,v_{r_k}^{(k)})$ eine Basis von V.
+\item $V=W_1+\ldots+W_k$ und $\dim(V)=\dim(W_1)+\ldots+\dim(W_k)$.
+\end{enumerate}
+\end{Satz}
+\section{Lineare Abbildungen}
+\begin{Definition}
+Eine Abbildung $F: V \rightarrow W$ zwischen K-Vektorräumen heißt \herv{linear} (oder \herv{Vektorraumhomomorphismus}), wenn gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item für alle $v,v'\in V$ gilt $F(v+v')=F(v)+F(v')$
+\item für alle $\lambda \in K$ und $v\in V$ gilt $F(\lambda v)=\lambda F(v)$
+\end{enumerate}
+Äquivalent: für alle $v,v' in V$ und $\mu, \lambda\in K$ gilt $F(\lambda v+ \mu v')=\lambda F(v)+\mu (F(v')$.\\
+\emph{i)} alleine besagt, dass $F: (V,+)\rightarrow (W,+)$ ein Gruppenhomomorphismus ist.
+\end{Definition}
+\begin{Bemerkung}
+Für jede lineare Abbildung $F:V \rightarrow W$ gilt: 
+\begin{itemize}
+\item $F(0)=0$
+\item $F(v-w)=F(v)-F(w)$
+\item $F(\lambda_1 v_1+\ldots + \lambda_r v_r )=\lambda_1 F(v_1)+\ldots+\lambda_r F(v_r)$ für alle $\lambda_1,\ldots,\lambda_r \in K$ und $v_1,\ldots, v_r\in V$
+\end{itemize}
+Drehmatrix $A$ für Drehung (im mathematisch positiven Sinne) eines Vektors $x\in \R^2$ um Winkel $\vartheta$ im $\R^2$ um den Ursprung: $x \mapsto A\cdot x$, $A=\left(\begin{matrix} \cos(\vartheta) & -\sin\vartheta \\ \sin\vartheta & \cos\vartheta \end{matrix}\right)$ \\
+Sei $K$ ein beliebiger Körper und $A\in M(m\times n, K)$. Multiplikation von Matrix mit Vektor ist eine lineare Abbildung $A\cdot - : K^n\rightarrow K^m$ definiert durch $A=(a_{ij})_{i=1,\ldots,m; j=1,\ldots,n}, x=\left(\begin{array}{c}x_1 \\ \vdots \\ x_m\end{array} \right)$, dann ist $A\cdot x=\left(\begin{array}{c} a_{11}x_1+\ldots+a_{1n}x_n \\ \vdots \\a_{i1}x_1+\ldots+a_{in}x_n\\ \vdots \\ a_{m1}x_1+\ldots+a_{mn}x_n \end{array} \right)$. Es gilt $A\cdot (x+y)=Ax+Ay$, $A(\lambda x)=\lambda (Ax)$ für $x,y\in K^n, \lambda \in K$. \\
+Umgekehrt ist jede Abbildung, die linear ist, $F: K^n \rightarrow K^m$ gegeben durch Multiplikation mit einer eindeutig bestimmten Matrix $A$. $A\cdot e_j=$ $j$-te Spalte von $A$. Die Spalten von $A$ sind die Bilder der Vektoren $e_1,\ldots,e_n$ unter der linearen Abbildung $A\cdot - :K^n \rightarrow K^m$. Zu jeder linearen Abbildung $F:K^n\rightarrow K^m$ kann es also höchstens eine Matrix $A$ geben mit $F(x)=A\cdot x$ für alle $x\in K^n$. Zu $F$ bilden wir also die Matrix $A:=(F(e_1),F(e_2),\ldots,F(e_n))\in M(m\times n, K)$. Abbildung $M(m\times n, K) \rightarrow $Hom$_K(K^n, K^m)$, $A\mapsto A\cdot - $ ist bijektiv.\\
+Transposition ist lineare Abbildung.\\
+Ist  $(v_i)_{i\in I}$ eine linear abhängige Familie von $V$, so ist $(F(v_i))_{i\in I}$ linear abhängig in $W$.\\
+Sind $V' \subseteq V$ und $W'\subseteq W$ Untervektorräume, dann sind auch $F(V')=\{F(v):v\in V'\}$ und $F^{-1}(W')=\{v\in V:F(v)\in W'\}$ wieder Untervektorräume.\\
+$\dim F(v)\leq \dim V$ \\
+Falls $F$ bijektiv ist, dann ist auch $F^{-1}: W\rightarrow V$ linear.
+\end{Bemerkung}
+\begin{Bemerkung}
+Seien $U,V$ und $W$ $K$-Vektorräume und $G:U\rightarrow V$ und $F:V \rightarrow W$ linear, dann ist auch $F\circ G:U\rightarrow W$ linear.
+\end{Bemerkung}
+Für einen Vektorraum $V$ sei Hom$_K(V,W)\subseteq$ Abb$(V,W)$ die Menge aller $K$-Vektorraumhomomorphismen.
+\begin{Bemerkung}
+Hom$_K(V,W)$ ist ein Untervektorraum von Abb$(V,W)$.\\
+Spezialfall: $V=W \rightarrow$ End$_K(V)=$Hom$_K(V,V)$ ist die Menge der Endomorphismen von $V$. Dies ist eine Abelsche Gruppe unter $+$, und hat die binäre Abbildung $\circ: $End$_K(V)\times$End$_K(V) \rightarrow$End$_K(V)$. 
+\end{Bemerkung}
+\begin{Prop}
+Für jeden K-Vektorraum V ist die Menge \emph{End}$_K(V)$ ein Ring mit $1$ bzgl. $+$ und $\circ$. Falls $\dim_K(V)>1$, dann ist \emph{End}$_K(V)$ \underline{nicht} kommutativ.
+\end{Prop}
+\begin{Bemerkung}
+Die Menge $M(n\times n, K)$ aller quadratischen $n\times n$-Matrizen ist ein Ring mit $1$ bzgl. $+$ und $\cdot$. Einselement: Einheitsmatrix $E_n$.
+\end{Bemerkung}
+\begin{Satz}
+Für jeden Körper K und alle $n\geq 1$ ist die Abbildung $M(n\times n, K)\rightarrow $\emph{End}$_K(K^n,K^n)$ $A\mapsto (A\cdot -, K^n \rightarrow K^n)$ mit $A\mapsto A\cdot x$ ein Isomorphismus von Ringen.
+\end{Satz}
+\begin{Definition}
+Sei $F:V\rightarrow W$ eine lineare Abbildung zwischen K-Vektorräumen. Sei $w\in W$. Dann heißt \emph{Im}$(F)=F(V)=\{F(v):v\in V\}$ das \herv{Bild} von F. $F^{-1}(w)=\{v\in V: F(v)=w\}$ die \herv{Faser} über w. \emph{Ker}$(F)=F^{-1}(0)=\{v\in V: F(v)=0\}$ der \herv{Kern} von F.
+\end{Definition}
+\begin{Bemerkung}
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\alph{enumi})}}
+\item Im$(F)$ und Ker$(F)$ sind Untervektorräume von W bzw. V 
+\item F ist surjektiv $\Leftrightarrow$ Im$(F)=W$ 
+\item F ist injektiv $\Leftrightarrow$ Ker$(F)=\{0\}$
+\item Ist F injektiv und $(v_1,\ldots,v_n)$ linear unabhängig in V, dann ist $(F(v_1),\ldots,F(v_n))$ linear unabhängig in W.
+\end{enumerate}
+\end{Bemerkung}
+\begin{Definition}
+Sei $A\in M(m\times n, K)$ eine $m\times n$-Matrix und $F=A\cdot -: K^n\rightarrow K^m$ die zugehörige lineare Abbildung mit $F(x)=A x$. Der \herv{Rang} von A ist definiert als \emph{Rang}$(A)=\dim(\emph{Im}(F))=\dim(\emph{Im}(A\cdot -))$.
+\end{Definition}
+\glqq Fasern $F^{-1}(w)$ sind parallel verschobene Kopien von Ker$(F)$\grqq
+\begin{Bemerkung}
+Sei $F:V\rightarrow W$ linear und $w\in$Im$(F)$. Dann ist für alle $u \in V$ mit $F(u)=w$ $F^{-1}(w)=u+$Ker$(F)=\{u+v: v \in $Ker$(F)\}$.
+\end{Bemerkung}
+\begin{Definition}
+Eine Teilmenge X eines K-Vektorraums V heißt \herv{affiner Untervektorraum}, falls es ein $v\in V$ und einen Untervektorraum W von V gibt mit $X=v+W=\{v+w: w\in W\}$.
+\end{Definition}
+\begin{Bemerkung}
+Sei $X$ ein affiner Untervektorraum von $V$. Dann ist $X-X=\{v-w: v,w\in X\}$ ein Untervektorraum und für alle $u\in X$ gilt $X=u+(X-X)$.
+\end{Bemerkung}
+\begin{Definition}
+Sei X ein affiner Untervektorraum von V, etwa $X=v+W$. Dann ist $\dim(X)=\dim(W)$ die \herv{Dimension} von X.
+\end{Definition}
+\begin{Satz}
+Sei $F: V \rightarrow W$ linear und V endlichdimensional. Seien $(v_1,\ldots,v_k)$ eine Basis von \emph{Ker}$(F)$ und $(w_1,\ldots,w_r)$ eine Basis von \emph{Im}$(F)$. Seien $u_1\in F^{-1}(w_1),\ldots,u_r\in F^{-1}(w_r)$ beliebige Vektorurbilder. Dann ist $(v_1,\ldots,v_k,u_1,\ldots,u_r)$ eine Basis von V. Also ist $\dim(V)=\dim(\emph{Ker}(F))+\dim(\emph{Im}(F))$.
+\end{Satz}
+\begin{Korollar}
+Sei V endlichdimensionaler K-Vektorraum und $F:V\rightarrow W$ linear. Dann gilt für alle nicht leeren Fasern von F: $\dim(F^{-1}(w))=\dim(V)-\dim(\emph{Im}(F))$.
+\end{Korollar}
+\begin{Korollar}
+Zwischen zwei endlichdimensionalen Vektorräumen V und W gibt es genau dann einen Isomorphismus, wenn $\dim(V)=\dim(W)$
+\end{Korollar}
+\begin{Korollar}
+Seien V und W endlichdimensionale K-Vektorräume und $F: V\rightarrow W$ linear und $\dim(V)=\dim(W)$. Dann sind äquivalent:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item F ist bijektiv, also ein Isomorphismus.
+\item F ist injektiv.
+\item F ist surjektiv.
+\end{enumerate}
+\end{Korollar}
+\begin{Satz} [Faktorisierungssatz]
+Sei $F:V\rightarrow W$ linear und $(u_1,\ldots,u_r,v_1,\ldots,v_k)$ Basis von V. Sei \emph{span}$(v_1,\ldots,v_k)=\emph{Ker}(F)$. Wir definieren $U=\emph{span}(u_1,\ldots,u_r)$. Dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $V=\emph{Ker}(F)\oplus U$.
+\item Die Einschränkung von F auf U ist ein Isomorphismus $F_{|U}:U\rightarrow \emph{Im}(F)$.
+\item Sei $P:V=U\oplus\emph{Ker}(F)\rightarrow U$ die Projektion auf den ersten Summanden, d.h. für $v=u+v', u\in U, v'\in \emph{Ker}(F)$ ist $P(v)=u$. Dann gilt $F=(F_{|U})\circ P$
+Insgesamt kann F also geschrieben werden als folgende Komposition:
+\[ \begin{xy}
+	\xymatrix{
+		V \ar@{->>}[r]^P \ar@/_ 0.75cm/[rrr]_F & U \ar[r]^/-.5em/{\cong}_/-.5em/{F_{|U}} & \emph{Im}(F) \ar@^{(->}[r] & W
+	}
+\end{xy} \]
+\item Jede nicht-leere Faser von F schneidet U in genau einem Element. Es gilt $F^{-1}(F(v))\cap U=\{P(v)\}$ für alle $v\in V$.
+\end{enumerate}
+\end{Satz}
+\end{document}
