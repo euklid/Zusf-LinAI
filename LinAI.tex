@@ -810,10 +810,107 @@ Sei $F:V\rightarrow W$ linear und $(u_1,\ldots,u_r,v_1,\ldots,v_k)$ Basis von V.
 Insgesamt kann F also geschrieben werden als folgende Komposition:
 \[ \begin{xy}
 	\xymatrix{
-		V \ar@{->>}[r]^P \ar@/_ 0.75cm/[rrr]_F & U \ar[r]^/-.5em/{\cong}_/-.5em/{F_{|U}} & \emph{Im}(F) \ar@^{(->}[r] & W
+		V \ar@{->>}[r]^P \ar@/_ 0.75cm/[rrr]_F & U \ar[r]^/-.5em/{\cong}_/-.5em/{F_{|U}} & \emph{Im}(F) \ar@{^(->}[r] & W
 	}
 \end{xy} \]
 \item Jede nicht-leere Faser von F schneidet U in genau einem Element. Es gilt $F^{-1}(F(v))\cap U=\{P(v)\}$ für alle $v\in V$.
 \end{enumerate}
 \end{Satz}
+\section{Quotientenvektorraum}
+Gegeben: Vektorraum $V$ und Untervektorraum $U$. Kanonische Konstruktion einer linearen Abbildung $\varrho : V \rightarrow V/U$ mit Kern $U$. Das Bild der Abbildung $V/U$ heißt \textbf{Quotientenvektorraum}. Wir definieren eine Äquivalenzrelation $\sim_U$ auf $V$, \glqq Äquivalenz modulo $U$\grqq.
+\begin{Definition}
+Für $v,w\in W$ ist $v\sim_U w \Leftrightarrow v-w \in U$. Dies ist eine Äquivalenzrelation. Wir schreiben $V/U$ für die Menge der Äquivalenzklassen von $\sim_U.$ Für jedes $v\in V$ schreiben wir $v+U=\{v+u:u\in U\}$ für die Äquivalenz von v
+\end{Definition}
+\begin{Bemerkung}
+Die Äquivalenzklassen sind die affinen Untervektorräume von $V$ zu $U$.
+\end{Bemerkung}
+Wir bezeichnen $\varrho:V\rightarrow V/U$ die kanonische Abbildung, die $v\in V$ auf seine Äquivalenzklasse abbildet, also $\varrho(v)=v+U$. Diese Abbildung ist surjektiv. (aber in der Regel nicht injektiv). \\
+\underline{Extremfälle:} \begin{itemize}
+\item $U=\{0\}$, dann ist $v$ nur zu sich selbst äquivalent und $v+U=v+\{0\}=\{v\}$. Dann ist die Abbildung $\varrho V\rightarrow V/U=V/\{0\}$ bijektiv.
+\item $U=V$, dann sind je zwei Vektoren äquivalent, also gibt es nur eine Äquivalenzklasse, nämlich $V$, und $V/U$ ist ein Nullvektorraum.
+\end{itemize}
+\begin{Satz}
+Sei V ein K-Vektorraum und U ein Untervektorraum von V. Dann kann $V/U$ auf genau eine Weise so zu einem K-Vektorraum gemacht werden, dass die Abbildung $\varrho:V\rightarrow V/U$ linear ist. (Addition auf $V/U$ auf Repräsentanten) Weiter gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\arabic{enumi})}}
+\item $\varrho$ ist surjektiv.
+\item $\emph{Ker}(\varrho)=U$.
+\item Falls $V$ endlich dimensional ist, dann sind auch $U$ und $V/U$ endlichdimensional und es gilt $\dim(V/U)=\dim(V)-\dim(U)$.
+\item \herv{Universelle Eigenschaft}: Sei $F:V\rightarrow W$ eine lineare Abbildung mit $U\subseteq \emph{Ker}(F)$. Dann gibt es genau eine lineare Abbildung $\bar{F}:V/U\rightarrow W$ mit $\bar{F}\circ \varrho=F$. ($\bar{F}(v+U)=F(v)$) Außerdem ist $\emph{Ker}(\bar{F})=\emph{Ker}(F)/U$
+\[ \begin{xy}
+	\xymatrix{
+		V \ar[r]^F \ar[d]_\varrho & W \\
+		V/U \ar@{.>}[ru]_{\exists ! \bar{F}}
+	}
+\end{xy} \]
+\end{enumerate}
+\end{Satz}
+\begin{Satz}
+Seien $U,V$ Untervektorräume eines K-Vektorraums $V$ mit $V=U\oplus W$. Dann ist die Komposition $ \begin{xy}
+\xymatrix{
+	W \ar[r]^{\text{Inkl.}} \ar@/_ 0.5cm/[rr]_{\varrho'=\varrho_{|W}} & V \ar[r]^/-0.25em/\varrho & V/U
+}
+\end{xy} $ ein Isomorphismus.
+\end{Satz}
+\begin{Bemerkung}
+Ein Komplement $W$ zu $U$ spielt eine ähnliche Rolle wie $V/U$, aber: Komplement ist eine Wahl, $V/U$ ist eine konkrete Konstruktion.
+\end{Bemerkung}
+\section{Lineare Gleichungssysteme}
+Sei $A=(a_{ij})\in M(m\times n,K)$ eine $m\times n$-Matrix über einen Körper $K$. Sei $b\in K^m$ ein Spaltenvektor. Dies liefert ein \textbf{inhomogenes Gleichungssystem} $A\cdot x=b$ oder $\sum_{j=1}^n {a_{ij}x_j}=b_i$ für alle $i=1,\ldots,m$, $x=(x_1,x_2,\ldots,x_n) \in K^n$. Das dazugehörige \textbf{homogene Gleichungssystem} ist $A\cdot x=0$, oder $\sum_{j=1}^n{a_{ij}x_j}=0$ für alle $i=1,\ldots,m$. Die Matrix $A$ liefert eine lineare Abbildung $F=A\cdot -: K^n \rightarrow K^m$ definiert durch $F(x)=A\cdot x$. Die \textbf{Lösungsmenge} des homogenen Gleichungssystem ist Lös$(A,0)=\{x\in K^n:A\cdot x=0\}=$ Ker$(F)=$ Ker$(A\cdot -)$. Lös$(A,b)=\{x\in K^n:A\cdot x=b\}=F^{-1}(b)$ Faser von $F$ über $b$. Wir setzen $r=$ rang$(A)=$ Spaltenrang$(A)=\dim($Im$(A\cdot -))=\dim($Im$(F))$.
+\begin{Korollar}
+Sei $A\in M(m\times n,K), b\in K^m, r=\emph{rang}(A)$. Dann gilt: \begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\arabic{enumi})}}
+\item $\emph{Lös}(A,0)$ ist ein Untervektorraum von $K^n$ der Dimension $n-r$.
+\item $\emph{Lös}(A,b)$ ist entweder leer oder ein affiner Untervektorraum von $K^n$ der Dimension $n-r$. Ist $v\in \emph{Lös}(A,b)$, dann ist $\emph{Lös}(A,b)=v+\emph{Lös}(A,0)$. \glqq Die Lösungen des inhomogenen Gleichungssystems erhält man aus einer speziellen Lösung durch Addition des homogenen Gleichungssystems\grqq.
+\end{enumerate}
+\end{Korollar}
+\begin{Satz}
+Sei $A\in M(m\times n,K), b\in K^n$. Das inhomogene Gleichungssystem $A\cdot x=b$. hat genau dann eine Lösung, wenn gilt $\emph{rang}(A)=\emph{rang}(A,B)$ (A um Spalte b ergänzt).
+\end{Satz}
+\begin{Bemerkung}
+Sei $A\in M(m\times n, K),b\in (K^m).$ Dann sind äquivalent: \begin{enumerate}
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\item Das lineare Gleichungssystem $A\times x=b$ ist eindeutig lösbar.
+\item rang$(A)=$rang$(A,b)=n$.
+\end{enumerate}
+\end{Bemerkung}
+\section{Beschreibung linearer Abbildungen durch Matrizen}
+Verallgemeinerung von Isomorphismen Hom$(K^n,K^m)\cong M(m\times n,K)$ $A\cdot - \mapsto A$.
+\begin{Satz}
+Seien $V,W$ endlichdimensionale K-Vektorräume und $v_1,\ldots,v_r\in V$ und $w_1,\ldots,w_r\in W$. Dann gilt:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item Falls $(v_1,\ldots,v_r)$ linear unabhängig ist, dann gibt es stets eine lineare Abbildung $F:V\rightarrow W$ mit $F(v_i)=w_i$ für alle $i=1,\ldots,r$.
+\item Falls $(v_1,\ldots,v_r)$ eine Basis von V ist, dann gibt es genau eine lineare Abbildung $F:V\rightarrow W$ mit $F(v_i)=w_i$ für alle $i=1,\ldots,r$. ($F(v)=F(\lambda_1v_1+\ldots+\lambda_rv_r)=\lambda_1w_1+\ldots+\lambda_rw_r$)
+Für dieses F gilt weiter:
+\begin{itemize}
+\item \emph{Im}$(F)=\emph{span}(w_1,\ldots,w_r)$
+\item F injektiv $\Leftrightarrow (w_1,\ldots,w_r)$ ist linear unabhängig.
+\end{itemize}
+\end{enumerate}
+\end{Satz}
+\begin{Korollar}
+Sei V ein K-Vektorraum mit Basis $\mathcal{B}=(v_1,\ldots,v_n)$. Dann gibt es genau einen Isomorphismus $\Phi_\mathcal{B}:K^n \rightarrow V$ mit $\Phi_\mathcal{B}(e_i)=v_i$ für alle $i=1,\ldots,n$ (wobei $(e_1,\ldots,e_n)$ die kanonische Basis von $K^n$ ist). $\Phi_\mathcal{B}$ heißt \herv{Koordinatentransformation} von V bzgl. $\mathcal{B}$.
+\end{Korollar}
+\begin{Korollar}
+Zu jeder linearen Abbildung $F:K^n\rightarrow K^m$ gibt es genau eine Matrix $A\in M(m\times n,K)$ mit $F(x)=A\cdot x$ für alle $x\in K^n$. Die Spalten von A sind die Bilder $F(e_i)$ der kanonischen Basisvektoren.
+\end{Korollar}
+\begin{Satz}
+Seien V und W K-Vektorräume mit Basen $\mathcal{A}=(v_1,\ldots,v_n)$ von V bzw. $\mathcal{B}=(w_1,\ldots,w_m)$ von W. Dann gibt es zu jeder linearen Abbildung $F:V\rightarrow W$ genau eine Matrix $A\in M(m\times n,K)$ mit $F(v_j)=\sum_{i=1}^m{a_{ij}w_i}$ für $j=1,\ldots,n$, $A=(a_{ij})_{i=1,\ldots,n; j=1,\ldots,m}$. Die so erhaltene Abbildung $M^\mathcal{A}_\mathcal{B}: \emph{Hom}_K(V,W)\rightarrow M(m\times n, K), F\mapsto A$ ist ein Vektorraumisomorphismus. Insbesondere gilt: $M^\mathcal{A}_\mathcal{B}(F+G)=M^\mathcal{A}_\mathcal{B}(F)+M^\mathcal{A}_\mathcal{B}(G)$ und $M^\mathcal{A}_\mathcal{B}(\lambda\cdot F)=\lambda \cdot M^\mathcal{A}_\mathcal{B}(F)$ für alle $F,G\in \emph{Hom}_K(V,W),\lambda \in K$. $M^\mathcal{A}_\mathcal{B}(F)$ heißt die \herv{darstellende Matrix} von F bzgl. der Basen $\mathcal{A}$ und $\mathcal{B}$.
+\end{Satz}
+\begin{Bemerkung}
+Für $V=K^n, W=K^m, \mathcal{A}=(e_1,\ldots,e_n), \mathcal{B}=(e_1,\ldots,e_m)$ gilt $M^\mathcal{A}_\mathcal{B}(A\cdot -)=A$ für alle $A\in M(m\times n, K)$ Anders gesagt: für die lineare Abbildung $F:K^n \rightarrow K^m$, definiert durch $F(x)=A\cdot x$, gilt $M^\mathcal{A}_\mathcal{B}(F)=A$.\\
+\underline{Vorsicht!} Für $V=K^n, W=K^m$ über $\mathcal{A}$ und/oder $\mathcal{B}$ \underline{nicht} die kanonische Basis, gilt normalerweise \underline{nicht} $M^\mathcal{A}_\mathcal{B}(A\cdot -)=A$.
+\end{Bemerkung}
+\begin{Korollar}
+Sei $F:V\rightarrow W$ linear, $n=\dim(V)$, $m=dim(W)$, $r=\dim\emph{Im}(F)$. Dann gibt es Basen $\mathcal{A}$ von V und $\mathcal{B}$ von W, sodass die darstellende Matrix die Form $M^\mathcal{A}_\mathcal{B}(F)=\left(\begin{matrix} E_r & 0 \\ 0 & 0 \end{matrix} \right)=\left( \begin{matrix}
+\begin{matrix}
+1 & & 0\\
+& \ddots & \\
+0 & & 1 
+\end{matrix} & 0 \\ 0 & 0
+\end{matrix} \right)$.
+\end{Korollar}
+\section{Matrizenmultiplikation}
+Seien $A=(a_{ij})\in M(m\times n,K)$ und $B=(b_{jk})\in M(n\times r, K)$. Wir erhalten komponierbare lineare Abbildungen: $\begin{xy} \xymatrix@R=0.1cm{ K^r \ar[r]^{B\cdot -} & K^n \ar[r]^{A\cdot -} & K^ m \\ x \ar@{|->}[r] & y \ar@{|->}[r]& z } \end{xy}$. Dies ist eine lineare Abbildung, sie ist also gegeben durch Multiplikation mit einer Matrix $C\in M(m\times r, K)$. Es gilt $A\cdot (B \cdot x)= (A\cdot B)\cdot x= C\cdot x$.
 \end{document}
