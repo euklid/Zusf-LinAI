@@ -18,7 +18,7 @@
 \usepackage[amsthm,thmmarks]{ntheorem}
 %\usepackage{tabularx}
 \usepackage[arrow, matrix, curve]{xy}
-
+\usepackage{graphicx}
 % b) Lemma, Satz, Theorem usw.
 \makeatletter
 \renewtheoremstyle{plain}%
@@ -946,8 +946,70 @@ Für $A\in M(n\times n,K)$ sind äquivalent:
 \end{Lemma}
 \section{Koordinatentransformation}
 Sei $V$ ein $K$-Vektorraum mit Basis $\mathcal{B}=(v_1,\ldots,v_n)$. Diese Daten bestimmen einen eindeutigen Isomorphismus $\Phi_\mathcal{B}:K^n\rightarrow V$ mit $\Phi_\mathcal{B}(e_j)=v_j$ für $j=1,\ldots,n$. Linearität gibt $\Phi_\mathcal{B}(x_1,\ldots,x_n)=x_1v_1+\ldots+x_nv_n$. Zu $v\in V$ sind $(x_1,\ldots,x_n)=\Phi^{-1}_\mathcal{B}(v)\in K^n$ die Koordinaten von V bzgl. $\mathcal{B}$ und $\Phi_\mathcal{B}$ ist das durch $\mathcal{B}$ bestimmte Koordinatensystem. Seien $\mathcal{A}=(v_1,\ldots,v_n)$ und $\mathcal{B}=(w_1,\ldots,w_n)$ Basen von V. Es sei $T_\mathcal{B}^\mathcal{A}\in \text{GL}(n,K)$ die zum Isomorphismus 
-$ \begin{xy} \xymatrix{ K^n \ar[r]^{\Phi_\mathcal{A}} \ar@/_0.25cm/[rr]_{T^\mathcal{A}_\mathcal{B}} & V \ar[r]^{\Phi^{-1}_\mathcal{B}} & K^n } \end{xy} $ gehörige Matrix. \glqq Transformationsmatrix des Basiswechsels.\grqq
-Für $v=x_1v_1+\ldots + x_nv_n=y_1w_1+\ldots+y_nw_n$ $\left(\begin{array}{c} y_1 \\ \vdots \\ y_n \end{array}\right)=T^\mathcal{A}_\mathcal{B} \left( \begin{array}{c}x_1 \\ \vdots \\ x_n \end{array} \right)$ Mit $T_\mathcal{B}^\mathcal{A}$ kann man die Koordinaten von $v$ bezüglich $\mathcal{B}$ aus den Koordinaten bezüglich $\mathcal{A}$ berechnen.
+$ \begin{xy} \xymatrix{ K^n \ar[r]^{\Phi_\mathcal{A}} \ar@/_0.25cm/[rr]_{T^\mathcal{A}_\mathcal{B}} & V \ar[r]^{\Phi^{-1}_\mathcal{B}} & K^n } \end{xy} $ gehörige Matrix. \glqq Transformationsmatrix des Basiswechsels.\grqq\ 
+Für $v=x_1v_1+\ldots + x_nv_n=y_1w_1+\ldots+y_nw_n$ $\left(\begin{array}{c} y_1 \\ \vdots \\ y_n \end{array}\right)=T^\mathcal{A}_\mathcal{B} \left( \begin{array}{c}x_1 \\ \vdots \\ x_n \end{array} \right)$ Mit $T_\mathcal{B}^\mathcal{A}$ kann man, die Koordinaten von $v$ bezüglich $\mathcal{B}$ aus den Koordinaten bezüglich $\mathcal{A}$ berechnen.\\
+\underline{Allgemeiner Fall:} $V$ mit Basen $\mathcal{A}$ und $\mathcal{B}$. Schreibe $w_j=s_{1j}v_1+\ldots+s_{nj}v_n$ und $S=(s_{ij})$. Dann gilt $(\Phi_\mathcal{A}S)(e_j)=\Phi_\mathcal{B}(s_{1j},\ldots,s_{nj})=s_{1j}v_1+\ldots+s_{nj}v_n=w_j=\Phi_\mathcal{B}(e_j)$. $\Phi_\mathcal{B}=\Phi_\mathcal{A}\circ S$. $S=\Phi^{-1}_\mathcal{A} \Phi_\mathcal{B} = (T^\mathcal{A}_\mathcal{B})^{-1}$ und $T^\mathcal{A}_\mathcal{B}=S^{-1}$.
+\begin{Lemma}
+Sei $F:V\rightarrow W$ eine lineare Abbildung, $\mathcal{A}$ eine Basis von V und $\mathcal{B}$ eine Basis von W. Dann gilt $\Phi_\mathcal{B}\circ M^\mathcal{A}_\mathcal{B}=F\circ \Phi_A$: $ \begin{xy} \xymatrix{ 	K^n \ar[r]^{\Phi_\mathcal{A}} \ar[d]_{M^\mathcal{A}_\mathcal{B}(F)} & V \ar[d]^F \\	K^m \ar[r]^{\Phi_\mathcal{B}} & W }\end{xy} $
+\end{Lemma}
+\begin{Satz}
+Seien U,V,W K-Vektorräume, endlichdimensional, mit Basen $\mathcal{A},\mathcal{B}$ bzw. $\mathcal{C}$. Seien $G:U\rightarrow V$ und $F: V\rightarrow W$ lineare Abbildungen. Dann gilt $M^\mathcal{A}_\mathcal{C}(F\circ G)=M^\mathcal{B}_\mathcal{C}(F)\circ M^\mathcal{A}_\mathcal{B}(G)$.
+\end{Satz}
+\underline{Spezialfall:} $U=V=W$ und $F,G:V\rightarrow V$ Endomorphismen, $\mathcal{A}=\mathcal{B}=\mathcal{C}$. $M^\mathcal{B}_\mathcal{B}=:M_\mathcal{B}(F)$. Dann gilt $M_\mathcal{B}(F\circ G)=M_\mathcal{B}(F)\circ M_\mathcal{B}(G)$. Insbesondere ist $M_\mathcal{B}: $ End$_K(V)\rightarrow M(n\times n,K)$ ein Ringisomorphismus.
+\section{Transformationsformel}
+Sei $F:V\rightarrow W$ eine lineare Abbildung zwischen endlichdimensionalen K-Vektorräumen. Seien $\mathcal{A},\mathcal{A'}$ Basen von $V$ und $\mathcal{B}, \mathcal{B'}$ Basen von W. Dann gilt für die darstellbaren Matrizen $M^\mathcal{A'}_\mathcal{B'}(F)=T^\mathcal{B}_\mathcal{B'}\cdot M^\mathcal{A}_\mathcal{B}(F)\cdot \left(T^\mathcal{A}_\mathcal{A'}\right)^{-1}=T^\mathcal{B}_\mathcal{B'}\cdot M^\mathcal{A}_\mathcal{B}(F)\cdot T^\mathcal{A'}_\mathcal{A}$. Äquivalent: Folgendes Diagramm kommutiert:
+\[ \begin{xy}
+	\xymatrix{
+		K^n \ar[rrr]^{M^\mathcal{A}_\mathcal{B}(F)} \ar[dr]^{\Phi_\mathcal{A}} \ar[dd]_{T^\mathcal{A}_\mathcal{A'}} & & & K^m \ar[dl]_{\Phi_\mathcal{B}} \ar[dd]^{T^\mathcal{B}_\mathcal{B'}} \\
+		&  V \ar[r]^F & W & \\
+		K^n \ar[ur]_{\Phi_\mathcal{A'}} \ar[rrr]_{M^\mathcal{A'}_\mathcal{B'}(F)} & & & K^m \ar[ul]^{\Phi_\mathcal{B'}}
+	}
+\end{xy} \]
+\underline{Spezialfall:} $V=W, F: V\rightarrow V$ Endormorphismus. $\mathcal{A}=\mathcal{B}$ und $\mathcal{A'}=\mathcal{B'}$. Dann gilt $M_\mathcal{B'}(F)=T^\mathcal{B}_\mathcal{B'}\cdot M_\mathcal{B}(F)\cdot\left( T^\mathcal{B}_\mathcal{B'}\right)^{-1}$
+\begin{Satz}
+Für jede Matrix $A\in M(m\times n;K)$ gilt Spaltenrang$(A)$=Zeilenrang$(A)$.
+\end{Satz}
+\begin{Satz}
+Sei $A\in M(m\times n,K)$, $S\in\emph{GL}(m,K), T\in\emph{GL}(n,K)$. Dann gilt \begin{enumerate}
+\renewcommand{\labelenumi}{\emph{\arabic{enumi})}}
+\item Spaltenrang$(SAT)=$ Spaltenrang$(A)$
+\item Zeilenrang$(SAT)=$ Zeilenrang$(A)$.
+\end{enumerate}
+\end{Satz}
+\begin{Definition}
+Seien $A,B\in M(m\times n, K)$, A heißt \herv{äquivalent} zu B, falls es invertierbare Matrizen $S\in \emph{GL}(m,K)$ und $T\in \emph{GL}(n,K)$ gibt, so dass $B=S\cdot A\cdot T^{-1}$. Für $A,B\in M(m\times m,K)$ heißt A \herv{ähnlich} zu B, falls es $S\in \emph{GL}(m,K)$ gibt mit $B=S\cdot A\cdot S^{-1}$.
+\end{Definition}
+\begin{Bemerkung}
+Für $m=n$ gilt ähnlich $\Leftarrow$ äquivalent, aber i. A. nicht umgekehrt.\\
+\glqq Äquivalenz\grqq\ bzw. \glqq Ähnlichkeit\grqq\ sind Äquivalenzrelationen auf $M(m\times n,K)$ bzw. $M(m\times m,K)$. \\
+Zwei Matrizen aus $M(m\times m,K)$ sind genau dann äquivalent, wenn sie dieselbe lineare Abbildung bezüglich verschiedener Basenpaare beschreiben. \underline{Spezialfall:} Endomorphismen $V\overrightarrow{F} V$ $M_\mathcal{B'}(F)=T^\mathcal{B}_\mathcal{B'}\cdot M_\mathcal{B}(F)\cdot \left(T^\mathcal{B}_\mathcal{B'} \right)^{-1}$.
+\end{Bemerkung}
+\begin{Bemerkung}
+Zwei Matrizen aus $M(m\times m,K)$ sind genau dann ähnlich, wenn sie den gleichen Endomorphismus bezüglich verschiedener Basen beschreiben.
+\end{Bemerkung}
+\begin{Lemma}
+Zwei Matrizen aus $M(m\times m,K)$ sind genau dann äquivalent, wenn sie denselben Rang haben. Jede Matrix vom Rang r ist äquivalent zur Matrix $\left(\begin{matrix} E_r & 0 \\ 0 & 0 \end{matrix} \right)$
+\end{Lemma}
+\section{Elementarmatrizen und Matrixumformungen}
+$4$ Typen von elementaren Zeilenumformungen: $A\in M(m\times n,K)$. \\
+\begin{tabular}{p{0.48\textwidth} p{0.48\textwidth}}
+I $S_i(\lambda)\cdot A$ entsteht aus $A$ durch Multiplikation der $i$-ten Zeile mit $\lambda \in K$ & III $Q^j_i(\lambda)\cdot A$ entsteht aus $A$ durch Addition des $\lambda$-fachen der $j$-ten Zeile zur $i$-ten Zeile. $(i\neq j)$ \\ II $Q^j_i\cdot A$ entsteht aus $A$ durch Addition der $j$-ten Zeile mit $\lambda \in K$ $(i\neq j)$ & IV $P^j_i\cdot A$ entsteht aus $A$ durch Vertauschten der $i$-ten und $j$-ten Zeile. $P^i_j=P^j_i$. \\
+\includegraphics[width= 0.48\textwidth]{pics/ElMa1.png} & \includegraphics[width= 0.48\textwidth]{pics/ElMa2.png}
+\end{tabular}
+Die Matrizen $S_i(\lambda), Q^j_i, Q^j_i(\lambda)$ und $P^j_i$ heißen Elementarmatrizen. Analog mit Spaltenumformungen $(i\neq j)$: \begin{itemize}
+\item $A\cdot S_i(\lambda)$ entsteht aus $A$ durch Multiplikation der $i$-ten Spalte mit $\lambda$.
+\item $A\cdot Q^j_i(\lambda)$ entsteht aus $A$ durch Addition des $\lambda$-fachen der $i$-ten Spalte zur $j$-ten Spalte.
+\item $A\cdot P^j_i$ entsteht aus $A$ durch Vertauschen der $i$-ten und $j$-ten Spalte.
+\end{itemize}
+\begin{Bemerkung}
+Die Elementarmatrizen $(\lambda\neq 0)$ $Q^j_i(\lambda)$ und $P^j_i$ sind Produkte von Elementarmatrizen des Typs I und II, genauer : $Q^j_i(\lambda)=S_j(\frac{1}{\lambda})\cdot Q^j_i\cdot S_j(\lambda)$ bzw. $P^j_i=Q^i_j\cdot Q^j_i(-1)\cdot Q^i_j\cdot S_j(-1)$.
+\end{Bemerkung}
+\begin{Lemma}
+Die Elementarmatrizen sind invertierbar und ihre Inverse sind auch Elementarmatrizen: $(S_i(\lambda))^{-1}=S_i(\frac{1}{\lambda})$, $(Q^j_i)^{-1}=Q^j_i(-1)$, $(Q_i^j(\lambda))^{-1}=Q^j_i(-\lambda)$ ,$(P^j_i)^{-1}=P^j_i$.
+\end{Lemma}
+\begin{Satz}
+Jede invertierbare Matrix $A\in\emph{GL}(m,K)$ ist ein endliches Produkt von Elementarmatrizen. \glqq$\emph{GL}(m,K)$ wird von den Elementarmatrizen erzeugt.\grqq
+\end{Satz}
 \section{Determinanten}
 \subsection{Beispiele und Definitionen}
 \begin{bez}
@@ -1016,7 +1078,7 @@ Für jede Transposition $\tau$ gilt $\tau=\tau^{-1}$.
 Für $n\geq 2$ lässt sich jede Permutation als Komposition von endlich vielen Transpositionen schreiben.
 \end{Lemma}
 \begin{Bemerkung}
-Sei $\tau_0=(12)$. Für alle Tranpositionen $\tau\in S_n$ existiert dann ein $\sigma\in S_n$ mit
+Sei $\tau_0=(12)$. Für alle Transpositionen $\tau\in S_n$ existiert dann ein $\sigma\in S_n$ mit
 \[\tau=\sigma\circ\tau_0\circ\sigma^{-1}\]
 \end{Bemerkung}
 \begin{bez}
