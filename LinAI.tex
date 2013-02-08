@@ -1010,6 +1010,21 @@ Die Elementarmatrizen sind invertierbar und ihre Inverse sind auch Elementarmatr
 \begin{Satz}
 Jede invertierbare Matrix $A\in\emph{GL}(m,K)$ ist ein endliches Produkt von Elementarmatrizen. \glqq$\emph{GL}(m,K)$ wird von den Elementarmatrizen erzeugt.\grqq
 \end{Satz}
+\section{Rechenverfahren zur Bestimmung inverser Matrizen}
+$A\in M(n\times n,K)$ quadratische Matrix
+\begin{itemize}
+\item Schreibe $E_n$ in eine Spalte neben $A$.
+\item bringe $A$ durch Zeilenumformungen auf Zeilenstufenform; führe alle Zeilenumformungen parallel mit $E_n$ durch
+\item Wenn Zeilenstufenform erreicht ist, lese ab, ob $A$ maximalen Rang hat. Falls rang$(A)<n$, dann ist $A$ nicht invertierbar und breche ab.
+\item mache $A$ durch weitere Zeilenumformungen zur Einheitsmatrix $E_n$; wieder werden alle Umformungen parallel mit der zweiten Spalte gemacht.
+\item am Ende steht rechts die inverse Matrix $A^{-1}$.
+\end{itemize}
+\begin{Bemerkung}
+Das Verfahren funktioniert auch, wenn man ausschließlich Spaltenumformungen vornimmt. \underline{Warnung:} nicht Zeilen- und Spaltenumformungen mischen.
+\end{Bemerkung}
+Sei $A\in M(m\times n,K)$. Es gibt immer invertierbare Matrizen $S\in\text{GL}(m,K)$ und $T\in\text{GL}(n,K)$ mit $S\cdot A\cdot T^{-1}=\left(\begin{matrix} E_r & 0 \\ 0 & 0 \end{matrix}\right)$, wobei $r=\text{rang}(A)$.
+\section{Gauß-Verfahren mit Elementarmatrizen}
+Gegeben $A\in M(m\times n,K)$ und $b\in K^m$, gerade ist Lös$(A,b)=\{x\in K^n:Ax=b\}$. Es gibt $S\in $GL$(m,K)$, Produkt von Elementarmatrizen, sodass $S\cdot A$ Zeilenstufenform hat. Setze $\tilde{A}=S\cdot A, \tilde{b}=S\cdot b$, dann gilt Lös$(A,b)=\text{Lös}(S\cdot A, S\cdot b)=\text{Lös}(\tilde{A},\tilde{B})$. An $(\tilde{A},\tilde{B})$ kann man ablesen, ob es Lösungen gibt: Falls $\tilde{b_i}\neq 0$ für $i>\text{rang}(A) \Rightarrow \text{Lös}(A,b)=\emptyset$
 \section{Determinanten}
 \subsection{Beispiele und Definitionen}
 \begin{bez}
@@ -1132,4 +1147,102 @@ Sei $A$ eine quadratische $n\times n$-Matrix über dem Körper $K$. Dann gilt $\
 \begin{Bemerkung}
 Die meisten Eigenschaften der Determinante lassen sich auch auf Matrizen über kommutativen Ringen übertragen. Man überzeuge sich selbst, bei welchen das funktioniert.
 \end{Bemerkung}
+\begin{Beispiel}
+Die \textbf{Vandermonde-Determinate} ist\\ $K[x_1,\ldots,x_n]\ni\Delta_n=\left|\begin{matrix}
+1 & x_1 & x_1^2 & \ldots & x_1^{n-1} \\
+1 & x_2 & x_2^2 & \ldots & x_2^{n-1} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_n & x^2_n & \ldots & x_n^{n-1}
+\end{matrix} \right|=\prod_{1\leq i < j \leq n} (x_j-x_i) $ (lässt sich über Induktion zeigen).
+\end{Beispiel}
+\begin{Korollar}
+Seien $x_1,\ldots,x_n\in K$. Dann ist die Vandermonde-Matrix genau dann invertierbar, wenn $x_1,\ldots,x_n$ paarweise verschieden sind.
+\end{Korollar}
+\section{Minoren}
+\begin{Definition}
+Sei $A\in M(n\times n,K)$. Für $i,j\in\{1,\ldots,n\}$ sei $A_{ij}\in M(n\times n,K)$ die Matrix, bei der $a_ij$ durch $1$ ersetzt wird und alle anderen Einträge der $i$-ten Zeile und $j$-ten Spalte zu $0$ gesetzt werden. Die \herv{komplementäre Matrix} $A^\#=(a_{ij}^\#)\in M(n\times n, K)$ ist definiert durch $a_{ij}^\#=\det(A_{ji})$. 
+\end{Definition}
+\begin{Satz}
+Es gilt $A\cdot A^\#=A^\#\cdot A=\det(A)\cdot E_n$.
+\end{Satz}
+\begin{Definition}
+Es entstehe $A'_{ij}\in M((n-1)\times(n-1);K)$ aus A durch Streichen der i-ten Zeile und j-ten Spalte.
+\end{Definition}
+\begin{Bemerkung}
+$\det(A_ij)=(-1)^{i+j}\det(A'_{ij})$
+\end{Bemerkung}
+\begin{Bemerkung}
+Es gilt $\det(A_{ij})=\det(a^1,a^2,\ldots,a^{j-1},e^{i},a^{j+1},\ldots,a^n)$, wobei $a^k$ die $k$-te Spalte von $A$ ist und $e^i=\presuper t {(e_i)}$
+\end{Bemerkung}
+\begin{Korollar}
+Eine Matrix $A\in M(n\times n, R)$ ist genau dann invertierbar, falls $\det(A)$ eine Einheit in R ist, also ein inverses Element bezüglich $\cdot$ hat. (R ist Ring).
+\end{Korollar}
+\begin{Satz}[Entwicklungssatz nach Laplace]
+Für alle $A\in M(n\times n, K)$ gilt:\begin{itemize}
+\item für alle $i\in \{1,\ldots,n\}$ gilt $\det(A)=\sum_{j=1}^n{(-1)^{i+j}a_{ij}\cdot \det(A'_{ij})}$ \glqq Entwicklung nach der i-ten Zeile.\grqq
+\item für alle $j\in \{1,\ldots,n\}$ gilt $\det(A)=\sum_{i=1}^n{(-1)^{i+j}a_{ij}\cdot \det(A'_{ij})}$ \glqq Entwicklung nach der j-ten Zeile.\grqq
+\end{itemize}
+\end{Satz}
+\begin{Satz}
+Sei $A\in\emph{GL}(n,K)$ und definiere $C\in \emph{GL}(n,K)$ durch $c_ij=(-1)^{i+j}\cdot\det(A'_{ij})=\det(A_{ij})=a^\#_{ji}$. Dann gilt $A^{-1}=\frac{1}{\det(A)}\cdot \presuper tC$
+\end{Satz}
+Für $n=2$ gilt dies: $A^{-1}=\frac{1}{ad-bc}\cdot\left(\begin{matrix} d & -b \\ -c & a  \end{matrix}\right)$.
+\begin{Bemerkung}
+Für $A\in \text{GL}(n,K)$ hat jedes inhomogene Gleichungssystem $A\cdot x=b, x,b\in K^n$ eine eindeutige Lösung gegeben durch $x=\presuper t {(x_1,\ldots, x_n)}$ mit $x_i=\frac{\det(a^1,\ldots,a^{i-1},b,a^{i+1},\ldots,a^n)}{\det(A)}\in K$ für alle $i=1,\ldots,n$.
+\end{Bemerkung}
+\begin{Definition}
+Sei $A\in M(m\times n, K)$ und $k\leq min\{m,n\}$. Eine Matrix $A'\in M(k\times k, K)$ heißt \herv{k-reihige Teilematrix} von A, falls sich A durch Zeilen- und Spaltenvertauschungen auf die Form $\left(\begin{matrix}
+A' & * \\ * & * \end{matrix}\right)$ bringen lässt. (Streichen von Zeilen und Spalten zählt auch dazu). Der Skalar $\det(A')$ heißt ein \herv{k-reihiger Minor} von A.
+\end{Definition}
+\begin{Satz}
+Sei $A\in M(m\times n, K)$ und $r\in \N$ mit $r\leq \min\{m,n\}$. Dann sind äquivalent: \begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item $\emph{rang}(A)=r$
+\item Es gibt einen r-reihigen Minor, er von $0$ verschieden ist, und für alle $k>r$ ist jeder k-reihige Minor gleich $0$.
+\end{enumerate}
+\end{Satz}
+\begin{Definition}
+Sei V ein endlichdimensionaler K-Vektorraum und $F:V\rightarrow V$ ein Endomorphismus. Die Determinante von $F$ ist definiert als $\det(F)=\det(M^\mathcal{B}_\mathcal{B}(F))$ für eine Basis $\mathcal{B}$ von V. Dies ist unabhängig von der Wahl der Basis $\mathcal{B}$.
+\end{Definition}
+\begin{Bemerkung}
+Für $F\in\text{End}_K(V),\dim(V)<\infty$ sind äquivalent: 
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\item $F$ ist injektiv.
+\item $F$ ist surjektiv.
+\item $F$ ist bijektiv.
+\item $\det(F)\neq 0$.
+\end{enumerate}
+\end{Bemerkung}
+\textbf{Ab hier ist $\mathbf{K=\R}$}
+\begin{Definition}
+Sei V ein endlichdimensionaler Vektorraum. Ein Automorphismus $F:V\rightarrow V$ heißt \begin{itemize}
+\item \herv{orientierungstreu}, falls $\det(F)>0$
+\item \herv{orientierungsuntreu}, falls $\det(F)<0$
+\end{itemize}
+Seien $\mathcal{A}=(v_1,\ldots,v_n)$ und $\mathcal{B}=(w_1,\ldots,w_n)$ zwei Basen eines $\R$-Vektorraums V. Sei $F:V\rightarrow V$ derjenige Automorphismus mit $F(v_i)=w_i$ für alle $i=1,\ldots,n$. $\mathcal{A}$ und $\mathcal{B}$ heißen \herv{gleichorientiert}, $A\sim B$, falls $\det(F)>0$.
+\end{Definition}
+\begin{Bemerkung}
+\glqq gleichorientiert \grqq\ ist eine Äquivalenzrelation auf der Menge aller Basen von $V$ mit genau $2$ Äquivalenzklassen. Eine \herv{Orientierung} von $V$ ist eine solche Äquivalenzklasse.
+\end{Bemerkung}
+Für $V=\R^n$ kann man eine Orientierung auszeichnen, nämlich die, die die kanonische Basis $K=(e_1,\ldots,e_n)$ enthält: $\{A:A\sim K\}=\{A=(v^1,\ldots,v^n):\det(v^1,\ldots,v^n)>0\}$ bzw. $\{A:A\not\sim K\}=\{A=(v^1,\ldots,v^n):\det(v^1,\ldots,v^n)<0\}$\\
+Sei $G_+:=\{A\in \text{GL}(n,\R):\det(A)>0\}$, dies ist Untergruppe von $\text{GL}(n,\R)$.\\
+$G_-:=\{A\in \text{GL}(n,\R):\det(A)<0\}$. Es gilt $\text{GL}(n,\R)=G_+\cup G_{-}$.
+\begin{Bemerkung}
+Sei $T\in \text{GL}(n,\R)$ und $\det(T)<0$. Dann sind $-\cdot T: G_{+}\rightarrow G_-$ und $-\cdot T^{-1} : G_-\rightarrow G_+$ zueinander inverse Bijektionen. Insbesondere $G_-=G_+\cdot T$. Also $\text{GL}(n,\R)=G_+\cup (G_+\cdot T), G_+\cap(G_+\cdot T)=\emptyset$.
+\end{Bemerkung}
+\begin{Definition}
+Zwei Matrizen $A,B\in \emph{GL}(n,\R)$ heißen verbindbar, falls es eine stetige Abbildung $\varphi:[0;1]\rightarrow \emph{GL}(n,\R)$ gibt, mit $\varphi(0)=A, \varphi(1)=B$. ($\varphi$ heißt stetig, wenn jede der $n^2$ Koordinatenfunktionen stetig ist.)
+\end{Definition}
+\begin{Satz}
+Für $A,B\in \emph{GL}(n,\R)$ sind äquivalent:
+\begin{itemize}
+\renewcommand{\labelenumi}{\emph{(\roman{enumi})}}
+\item Es gilt $\det(A\cdot B)>0$ (oder äquivalent: A und B liegen in derselben Klasse von $\emph{GL}(n,\R)=G_+\cupdot G_-$)
+\item A und B sind in $\emph{GL}(n,\R)$ verbindbar.
+\end{itemize}
+\end{Satz}
+\begin{Lemma}
+Sei $A\in \emph{GL}(n,\R)$ mit $\det(A)>0$. Dann ist A mit $E_n$ verbindbar.
+\end{Lemma}
 \end{document}
