@@ -1246,4 +1246,66 @@ Für $A,B\in \emph{GL}(n,\R)$ sind äquivalent:
 \begin{Lemma}
 Sei $A\in \emph{GL}(n,\R)$ mit $\det(A)>0$. Dann ist A mit $E_n$ verbindbar.
 \end{Lemma}
+\section{Verschiedenes aus den Übungszetteln}
+\begin{Satz}[Übung 4.1]
+Sei $f: K \rightarrow R$ ein Homomorphismus von Ringen. Falls K ein Körper ist, ist f automatisch injektiv oder gleich $0$ (das nennt man auch den \emph{trivialen Ringhomomorphismus}). Es gibt keinen nicht-trivialen Ringhomomorphismus von einem Körper nach $\Z$.
+\end{Satz}
+\begin{Definition}[Übung 5.1]
+Sei R ein beliebiger Ring mit $1$. Nenne einen Ringhomomorphismus \herv{unital}, wenn er das $1$-Element auf das $1$-Element schickt.
+\end{Definition}
+\begin{Satz}[Übung 5.1]
+Für jeden Ring R gibt es genau einen unitalen Ringhomomorphismus $\Z \rightarrow R$.
+\end{Satz}
+\begin{Satz}[Übung 7.3]\label{Aufgabe7-3}
+Sei L ein Körper und $K\subset L$ ein Teilkörper. L wird mit seiner Addition und der Abbildung $K\times L \rightarrow L$ gegeben durch die Körpermultiplikation zu einem K-Vektorraum.
+\end{Satz}
+\begin{Satz}[Übung 7.5]
+Sei K ein endlicher Körper. Dann existieren eine Primzahl p und eine natürliche Zahl n, so dass K genau $p^n$ Elemente hat.
+\end{Satz}
+\begin{Definition}[Übung 8.5]
+Sei K ein Körper. Eine Matrix $A\in M(n \times n, K)$ heißt \herv{symmetrisch}, wenn sie gleich ihrer eigenen Transponierten ist: $A =\presuper t A$. Sie heißt \herv{schiefsymmetrisch} (oder \herv{alternierend}),
+falls $A = −\presuper t A$.
+\end{Definition}
+\begin{Satz}[Übung 8.5]
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\alph{enumi})}}
+\item Die symmetrischen Matrizen bilden einen Untervektorraum $\operatorname{Sym}(n,K)$ von $M(n \times n, K)$.
+\item Die schiefsymmetrischen Matrizen bilden einen Untervektorraum $\operatorname{Alt}(n, K)$ von $M (n \times n; K)$ 
+\item Sei nun char(K) $\neq$ 2. Dann $M(n \times n, K) = \operatorname{Sym}(n, K) \oplus \operatorname{Alt}(n, K)$.
+\end{enumerate}
+\end{Satz}
+\begin{Definition}[Übung 9.5]
+Sei K ein Körper und V ein K-Vektorraum. Für K-lineare Abbildungen $f,g: V \rightarrow V$ definiert man den \herv{Kommutator} $[f, g] : V \rightarrow V$ durch $[f, g](v) = f (g(v)) − g(f (v))$.
+\end{Definition}
+\begin{Satz}[Übung 9.5]
+Der Kommutator zweier linearer Abbildungen ist stets eine lineare Abbildung.
+\end{Satz}
+\begin{Satz}[Übung 10.5]
+Sei R ein nullteilerfreier kommutativer Ring mit $1$ und $K\subset R$ ein Unterring. Wenn K ein Körper ist, bekommt R analog zu Satz \ref{Aufgabe7-3} die Struktur eines K-Vektorraums. Falls R endlichdimensional als K-Vektorraum ist, ist R schon ein Körper.
+\end{Satz}
+\begin{Definition}[Übung 11.3]
+Sei K ein Körper. Eine Teilmenge $L \subset K^n$ heißt \herv{Gerade}, wenn $v, w \in K^n , w \neq 0,$ existieren mit $L = v + Kw$.
+\end{Definition}
+\begin{Satz}[Übung 11.3]
+Eine Teilmenge L des $K^n$ ist genau dann eine Gerade, wenn es eine Matrix $A\in M((n- 1) \times n, K)$ mit $\operatorname{rang}(A)= n-1$ und ein $b \in K^{n−1}$ gibt, so dass $L = \{x \in K^n : Ax = b\}$.
+\end{Satz}
+\begin{Definition}[Übung 12.4]
+Sei K ein Körper. Die Spurabbildung $\operatorname{Spur}: M(n\times n, K) \rightarrow K$ ist definiert durch $(a_{ij}) \mapsto \sum_{k=1}^n{ a_{kk}}$.
+\end{Definition}
+\begin{Satz}[Übung 12.4]
+Die Spurabbildung ist K-linear ist und für alle $A,B \in  M(n\times n,K)$ gilt $\operatorname{Spur}(AB) = \operatorname{Spur}(BA)$.
+\end{Satz}
+\begin{Definition}[Übung 13.3]
+Sei K ein Körper und $n\geq 2$. Eine Matrix $A = (a_{ij}) \in M(n\times n, K)$ ist eine \herv{Diagonalmatrix}, falls $a_{ij} = 0$ für alle $i\neq j$. Man schreibt dann $A = \operatorname{diag}(a_{11},\ldots, a_{nn})$.
+\end{Definition}
+\begin{Satz}[Übung 13.3]
+\begin{enumerate}
+\renewcommand{\labelenumi}{\emph{(\alph{enumi})}}
+\item Für $i\neq j$ ist die Elementarmatrix $Q^j_i(1) \in M(n\times n, K)$ nicht zu einer Diagonalmatrix ähnlich.
+\item Seien $\lambda_1,\ldots, \lambda_n, \mu_1,\ldots,\mu_n \in K$.Dann sind die zwei Diagonalmatrizen $\operatorname{diag}(\lambda_1,\ldots,\lambda_n)$ und $\operatorname{diag}(\mu_1,\ldots,\mu_n)$ genau dann ähnlich, wenn es eine Bijektion $\sigma : \{1,\ldots, n\} \rightarrow \{1,\ldots, n\}$ gibt, so dass $\lambda_i = \mu_{\sigma(i)}$ für alle $1\leq i\leq n$.
+\end{enumerate}
+\end{Satz}
+\begin{Satz}[Übung 13.5]
+Sei $F: M (m \times n, K)\rightarrow K$ eine K-lineare Abbildung. Dann existiert ein eindeutig bestimmte Matrix $B \in M(n \times m, K)$, so dass $F(A) = \operatorname{Spur}(BA)$ für alle Matrizen $A \in M(m\times n, K)$ gilt.
+\end{Satz}
 \end{document}
