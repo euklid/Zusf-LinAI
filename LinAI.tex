@@ -170,16 +170,19 @@ Lösungsmenge des Gleichungssystems: Lös$(A,b)=\{x\in\R^n: Ax=b\}$.
 \end{enumerate}
 \subsubsection{Explizites Lösen}
 \begin{Definition}
-Eine $m\times n$-Matrix hat Zeilenstufenform, wenn sie von folgender Form ist: %ToDo: Bild machen und einfügen, da keine Lust, das jetzt mit viel Latex-Fu zu machen...
+Eine $m\times n$-Matrix hat Zeilenstufenform, wenn sie von folgender Form ist
+\begin{minipage}{0.48\textwidth}
+\includegraphics[width=\textwidth]{pics/g36.png} \end{minipage}
+\begin{minipage}{0.48\textwidth} Dabei müssen die mit $\circledast$ markierten Einträge ungleich Null sein und unter der \glqq Zeilenstufentreppe\grqq\ stehen lauter Nullen (Bild aus Fischer (siehe oben), Seite 22). \end{minipage} 
 \end{Definition}
 \begin{Definition}[(formaler)]
 \begin{itemize}
 \item Es gibt eine Zahl r mit $0\leq r\leq m,$ sodass die ersten r Zeilen nicht $0$ sind und die Zeilen $r+1,\ldots,m$ $0$ sind.
 \item Für alle $1\leq i\leq r$ sei $j_i$ der Index derjenigen Spalte, die zuerst $\neq 0$ ist. $j_i=\min\{j:a_{ij}\neq 0\}$. Dann gilt $j_1<j_2<\ldots<j_r$.
 \end{itemize}
-Spezialfall: $j_1=1, j_2=2, \ldots, j_r=r$ % ToDo bild einfügen % kann immer durch umnummerierung der Variablen errericht werden.
-Die erweiterte Koeffizientenmatrix hat folgende Form: %ToDo Bild einfügen
-$a_{ii}\neq 0$ für $i=1,\ldots,r$.
+Spezialfall: $j_1=1, j_2=2, \ldots, j_r=r$; kann immer durch Umnummerierung der Variablen erreicht werden.
+Die erweiterte Koeffizientenmatrix hat folgende Form:\\ 
+\begin{minipage}{0.48\textwidth} \includegraphics[width=\textwidth]{pics/ErwKoeffMat.png}\end{minipage} \begin{minipage}{0.48\textwidth} $a_{ii}\neq 0$ für $i=1,\ldots,r$. (Bild aus Fischer(siehe oben), Seite 24) \end{minipage}
 \end{Definition}
 1. Fall: es gibt ein $i=r+1,\ldots,m$ mit $b_i\neq 0$. Dann ist eine der Gleichungen $0=b_i\neq 0$. Dann ist Lös$(A,b)=\emptyset$.\\
 2. Fall: $b_{r+1}=b_{r+2}=\ldots=b_m=0$ (Beachte: $r=m$ zugelassen, dann sind wir immer im zweiten Fall.) Dann sind $x_{r+1},\ldots,x_m$ freie Variablen, deren Werte frei gewählt werden können und man erhält $x_r,x_{r-1},\ldots,x_2,x_1$ durch sukzessives Auflösen nach der Variable und einsetzen. Wir wählen Parameter $\lambda_1,\ldots,\lambda_k\in\R$ ($k=n-r,$ Anzahl der freien Variablen) und setzen $x_{r+1}:=\lambda_1,\ldots, x_m:=\lambda_k$ . $x_r$ erhält man durch Auflösen von $a_{rr}x_r+a_{r,r+1}\lambda_1+\ldots+a_{rn}\lambda_k=b_r$. Auflösen gibt dann: $x_r:=\frac{1}{a_{rr}}(b_r-a_{r,r+1}\lambda_1-\ldots-a_{rn}\lambda_k)$. Am Ende erhalten wir (alle) Lösungen des Gleichungssystems als $x_n=\lambda_k,\ldots,x_{r+1}=\lambda_1$ frei wählbar, $x_r=\frac{1}{a_{rr}}(b_r-a_{r,r+1}\lambda_1-\ldots-a_{rn}\lambda_k)$, usw. $x_{r-1}=\ldots,\ldots,x_1=\ldots$ als explizite Ausdrücke in den $\lambda_1, \ldots,\lambda_k$. \\
